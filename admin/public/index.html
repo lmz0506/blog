@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog 管理平台</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Markdown渲染库 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+</head>
+<body>
+  <div class="header">
+    <h1>Blog 管理平台</h1>
+    <p>可视化管理您的博客内容</p>
+  </div>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" data-tab="home">🏠 首页管理</button>
+      <button class="tab" data-tab="pages">📝 页面管理</button>
+      <button class="tab" data-tab="docs">📚 文档管理</button>
+      <button class="tab" data-tab="data">💾 数据管理</button>
+      <button class="tab" data-tab="github">⭐ GitHub</button>
+      <button class="tab" data-tab="config">⚙️ 配置管理</button>
+      <button class="tab" data-tab="git">🔄 Git 操作</button>
+    </div>
+
+    <!-- 首页管理 -->
+    <div id="home" class="tab-content active">
+      <div class="card">
+        <h2>个人信息</h2>
+        <form id="profileForm">
+          <div class="form-group">
+            <label>姓名 *</label>
+            <input type="text" id="profileName" required>
+          </div>
+          <div class="form-group">
+            <label>个人简介 *</label>
+            <input type="text" id="profileBio" placeholder="全栈开发者 | 开源爱好者" required>
+          </div>
+          <div class="form-group">
+            <label>详细介绍 *</label>
+            <textarea id="profileIntro" rows="4" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>GitHub</label>
+            <input type="url" id="profileGithub" placeholder="https://github.com/username">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="profileEmail">
+          </div>
+          <button type="submit" class="btn btn-primary">保存个人信息</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>技能栈管理</h2>
+        <div id="skillsList"></div>
+        <button type="button" class="btn btn-secondary" onclick="addSkill()">+ 添加技能分类</button>
+      </div>
+
+      <div class="card">
+        <h2>当前在做</h2>
+        <div id="currentlyList"></div>
+        <button type="button" class="btn btn-secondary" onclick="addCurrently()">+ 添加项</button>
+      </div>
+
+      <div class="card">
+        <h2>项目管理</h2>
+        <form id="projectForm" style="margin-bottom: 30px;">
+          <div class="form-group">
+            <label>项目名称 *</label>
+            <input type="text" id="projectName" required>
+          </div>
+          <div class="form-group">
+            <label>项目描述 *</label>
+            <textarea id="projectDesc" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>项目链接 *</label>
+            <input type="url" id="projectUrl" required>
+          </div>
+          <div class="form-group">
+            <label>技术标签</label>
+            <input type="text" id="projectTags" placeholder="多个标签用逗号分隔">
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="projectStar" style="width: auto; margin: 0;">
+              标记为精选项目
+            </label>
+          </div>
+          <div class="form-group">
+            <label>扩展链接（可选）</label>
+            <div id="projectLinksContainer"></div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addProjectLink()">+ 添加扩展链接</button>
+            <small>为项目添加额外的相关链接，如扩展商店链接、演示地址等</small>
+          </div>
+          <button type="submit" class="btn btn-primary">添加项目</button>
+          <button type="button" class="btn btn-secondary" onclick="resetProjectForm()">重置</button>
+        </form>
+        <div id="projectsList"></div>
+      </div>
+    </div>
+
+    <!-- 页面管理 -->
+    <div id="pages" class="tab-content">
+      <div class="card">
+        <h2>新增/编辑页面</h2>
+        <form id="pageForm">
+          <div class="form-group">
+            <label>页面路径 *</label>
+            <input type="text" id="pagePath" placeholder="例如: about.md 或 projects/project-a.md" required>
+            <small>相对于 pages/ 目录的路径</small>
+          </div>
+          <div class="form-group">
+            <label>标题 *</label>
+            <input type="text" id="pageTitle" placeholder="页面标题" required>
+          </div>
+          <div class="form-group">
+            <label>Permalink</label>
+            <input type="text" id="pagePermalink" placeholder="/about.html">
+            <small>页面访问 URL</small>
+          </div>
+          <div class="form-group">
+            <label>布局</label>
+            <select id="pageLayout">
+              <option value="page">page - 带卡片样式的内容区</option>
+              <option value="default">default - 基础布局（无额外样式）</option>
+            </select>
+            <small>page布局会在内容外包裹 content-section 卡片样式，default布局直接显示内容</small>
+          </div>
+          <div class="form-group">
+            <label>内容 *</label>
+            <textarea id="pageContent" placeholder="Markdown 内容..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">保存页面</button>
+          <button type="button" class="btn btn-secondary" onclick="resetPageForm()">重置</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>现有页面列表</h2>
+        <div id="pagesList"></div>
+      </div>
+    </div>
+
+    <!-- 文档管理 -->
+    <div id="docs" class="tab-content">
+      <div class="card">
+        <h2>新增/编辑文档</h2>
+        <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fc; border-radius: 8px; border-left: 4px solid #667eea;">
+          <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #667eea;">📥 导入语雀文档</h3>
+          <p style="margin: 0 0 12px 0; font-size: 13px; color: #64748b;">
+            支持导入语雀导出的 Markdown 文档。导出时请选择：
+            <strong>导出 LaTeX 公式为 Markdown 语法</strong>、
+            <strong style="color: red">不允许选择：</strong>[
+            <strong style="color: #ae3647">保持语雀的换行</strong>、
+            <strong style="color: #ae3647">保持语雀的锚点</strong>]
+          </p>
+          <button type="button" class="btn btn-success" onclick="importYuqueDoc()">
+            📄 选择语雀 .md 文件导入
+          </button>
+        </div>
+        <form id="docForm">
+          <div class="form-group">
+            <label>分类 *</label>
+            <input type="text" id="docCategory" placeholder="例如: frontend, backend" required list="categoryList">
+            <datalist id="categoryList"></datalist>
+            <small>用于文档分类，会显示在知识库的左侧导航</small>
+          </div>
+          <div class="form-group">
+            <label>文件名 *</label>
+            <input type="text" id="docFilename" placeholder="例如: react-tutorial.md" required>
+            <small>必须以 .md 结尾，用于生成文件路径</small>
+          </div>
+          <div class="form-group">
+            <label>标题 *</label>
+            <input type="text" id="docTitle" placeholder="文档标题" required>
+            <small>显示在文档页面顶部和文档列表中</small>
+          </div>
+          <div class="form-group">
+            <label>日期 *</label>
+            <input type="date" id="docDate" required>
+          </div>
+          <div class="form-group">
+            <label>标签</label>
+            <input type="text" id="docTags" placeholder="多个标签用逗号分隔">
+          </div>
+          <div class="form-group">
+            <label>内容 *</label>
+            <textarea id="docContent" placeholder="Markdown 内容..." required></textarea>
+            <small style="display: block; margin-top: 5px;">
+              <strong>内容编写说明：</strong><br>
+              • 内容应该以二级标题（##）开始，会自动生成目录<br>
+              • 支持标准 Markdown 语法<br>
+              • 注意引用快前后要有空格，要不然Kramdown解析会有问题<br>
+              • 代码块使用三个反引号包裹<br>
+              • 示例：## 简介<br>
+              &nbsp;&nbsp;这是内容段落...<br>
+              &nbsp;&nbsp;## 详细说明<br>
+              &nbsp;&nbsp;更多内容...
+            </small>
+          </div>
+          <button type="submit" class="btn btn-primary">保存文档</button>
+          <button type="button" class="btn btn-secondary" onclick="resetDocForm()">重置</button>
+          <button type="button" class="btn btn-success" onclick="previewMarkdown()">👁️ 预览</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>现有文档列表</h2>
+        <div id="docsList"></div>
+      </div>
+    </div>
+
+    <!-- 数据管理 -->
+    <div id="data" class="tab-content">
+      <div class="card">
+        <h2>友链管理</h2>
+        <form id="linkForm" style="margin-bottom: 30px;">
+          <div class="form-group">
+            <label>名称 *</label>
+            <input type="text" id="linkName" placeholder="朋友的名字或网站名" required>
+          </div>
+          <div class="form-group">
+            <label>链接 *</label>
+            <input type="url" id="linkUrl" placeholder="https://example.com" required>
+          </div>
+          <div class="form-group">
+            <label>描述 *</label>
+            <input type="text" id="linkDesc" placeholder="一句话介绍" required>
+          </div>
+          <div class="form-group">
+            <label>头像链接</label>
+            <input type="url" id="linkAvatar" placeholder="https://example.com/avatar.jpg">
+          </div>
+          <button type="submit" class="btn btn-primary">添加友链</button>
+          <button type="button" class="btn btn-secondary" onclick="resetLinkForm()">重置</button>
+        </form>
+        <div id="linksList"></div>
+      </div>
+
+      <div class="card">
+        <h2>碎碎念管理</h2>
+        <form id="thoughtForm" style="margin-bottom: 30px;">
+          <div class="form-group">
+            <label>日期时间 *</label>
+            <input type="datetime-local" id="thoughtDatetime" required>
+          </div>
+          <div class="form-group">
+            <label>内容 *</label>
+            <textarea id="thoughtContent" placeholder="记录今天的想法..." rows="4" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>标签</label>
+            <input type="text" id="thoughtTags" placeholder="多个标签用逗号分隔，如: 生活, 思考">
+          </div>
+          <button type="submit" class="btn btn-primary">添加碎碎念</button>
+          <button type="button" class="btn btn-secondary" onclick="resetThoughtForm()">重置</button>
+        </form>
+        <div id="thoughtsList"></div>
+      </div>
+    </div>
+
+    <!-- 配置管理 -->
+    <div id="config" class="tab-content">
+      <form id="configForm">
+        <div class="card">
+          <h2>基础信息</h2>
+          <div class="form-group">
+            <label>网站标题 *</label>
+            <input type="text" id="configTitle" placeholder="我的个人主页" required>
+          </div>
+          <div class="form-group">
+            <label>网站描述 *</label>
+            <input type="text" id="configDescription" placeholder="个人主页 & 知识库" required>
+          </div>
+          <div class="form-group">
+            <label>网站URL</label>
+            <input type="url" id="configUrl" placeholder="https://doc.tannn.cn">
+            <small>网站的完整访问地址（用于SEO和RSS订阅，不是GitHub仓库地址）</small>
+          </div>
+          <div class="form-group">
+            <label>Base URL</label>
+            <input type="text" id="configBaseurl" placeholder="/blog">
+            <small>网站部署路径，示例：<br>
+              • 部署在根目录 (https://yourdomain.com/) → 留空<br>
+              • 部署在子目录 (https://yourdomain.com/blog/) → 填写 /blog<br>
+              • GitHub Pages (https://username.github.io/blog/) → 填写 /blog
+            </small>
+          </div>
+          <div class="form-group">
+            <label>GitHub 地址</label>
+            <input type="url" id="configGithubUrl" placeholder="https://github.com/username/repo">
+            <small>填写后会在网站右上角显示 GitHub 图标</small>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>页脚设置</h2>
+          <div class="form-group">
+            <label>页脚文本</label>
+            <input type="text" id="configFooterText" placeholder="例如: © 2024 我的博客. All rights reserved.">
+            <small>留空使用默认格式：© 年份 网站标题. All rights reserved.</small>
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="configFooterPoweredBy" style="width: auto; margin: 0;">
+              显示 "Powered by" 信息
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Powered by 文本</label>
+            <input type="text" id="configFooterPoweredByText" placeholder="Powered by">
+          </div>
+          <div class="form-group">
+            <label>技术名称</label>
+            <input type="text" id="configFooterPoweredByName" placeholder="Jekyll">
+          </div>
+          <div class="form-group">
+            <label>技术链接</label>
+            <input type="url" id="configFooterPoweredByLink" placeholder="https://jekyllrb.com/">
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>统计设置</h2>
+          <div class="form-group">
+            <label>百度统计 ID</label>
+            <input type="text" id="configBaiduAnalytics" placeholder="c630ecba9d6dc3f9cc2372632e2508f0">
+            <small>填写百度统计提供的统计ID（hm.js?后面的参数），留空则不启用百度统计</small>
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="configBusuanziCounter" style="width: auto; margin: 0;">
+              启用不蒜子访问量统计
+            </label>
+            <small>在页脚显示网站总访问量和总访客数</small>
+          </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+          <button type="submit" class="btn btn-primary" style="padding: 12px 48px; font-size: 16px;">保存所有配置</button>
+        </div>
+      </form>
+
+      <div class="card">
+        <h2>图标设置</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+          <div>
+            <h3 style="font-size: 16px; margin-bottom: 16px; color: #667eea;">网站图标 (Favicon)</h3>
+            <div class="form-group">
+              <label>上传图标</label>
+              <input type="file" id="faviconInput" accept="image/*">
+              <small>建议尺寸: 32x32 或 64x64 像素</small>
+            </div>
+            <div id="faviconPreview" style="margin-top: 16px;">
+              <!-- 预览图标 -->
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" onclick="uploadFavicon()">上传Favicon</button>
+          </div>
+
+          <div>
+            <h3 style="font-size: 16px; margin-bottom: 16px; color: #667eea;">个人头像 (Avatar)</h3>
+            <div class="form-group">
+              <label>上传头像</label>
+              <input type="file" id="avatarInput" accept="image/*">
+              <small>建议尺寸: 200x200 像素</small>
+            </div>
+            <div id="avatarPreview" style="margin-top: 16px;">
+              <!-- 预览头像 -->
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" onclick="uploadAvatar()">上传Avatar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GitHub 精选管理 -->
+    <div id="github" class="tab-content">
+      <div class="card">
+        <h2>GitHub 精选项目管理</h2>
+        <form id="githubProjectForm" style="margin-bottom: 30px;">
+          <div class="form-group">
+            <label>项目名称 *</label>
+            <input type="text" id="githubProjectName" placeholder="例如: React" required>
+          </div>
+          <div class="form-group">
+            <label>项目描述 *</label>
+            <textarea id="githubProjectDesc" rows="2" placeholder="简短描述这个项目" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>GitHub 链接 *</label>
+            <input type="url" id="githubProjectUrl" placeholder="https://github.com/facebook/react" required>
+            <small>填写链接后，Stars 和编程语言将在博客页面加载时自动获取</small>
+          </div>
+          <div class="form-group">
+            <label>标签</label>
+            <input type="text" id="githubProjectTags" placeholder="多个标签用逗号分隔，默认包含 github 标签">
+            <small>用于分类筛选，默认会包含 "github" 标签</small>
+          </div>
+          <div class="form-group">
+            <label>添加时间</label>
+            <input type="datetime-local" id="githubProjectAddtime" required>
+            <small>用于排序，默认按时间倒序显示</small>
+          </div>
+          <button type="submit" class="btn btn-primary">添加项目</button>
+          <button type="button" class="btn btn-secondary" onclick="resetGithubProjectForm()">重置</button>
+        </form>
+        <div id="githubProjectsList"></div>
+      </div>
+    </div>
+
+    <!-- Git 操作 -->
+    <div id="git" class="tab-content">
+      <div class="card">
+        <h2>Git 状态</h2>
+        <div id="gitStatus" class="loading">加载中...</div>
+      </div>
+
+      <div class="card">
+        <h2>快速操作</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="pullFromRemote()">⬇️ 拉取更新</button>
+          <button class="btn btn-secondary" onclick="showDiffModal()">📊 查看差异</button>
+          <button class="btn btn-warning" onclick="showStashModal()">💾 暂存改动</button>
+          <button class="btn btn-secondary" onclick="refreshGitStatus()">🔄 刷新状态</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>提交并推送</h2>
+        <form id="gitForm">
+          <div class="form-group">
+            <label>提交信息 *</label>
+            <input type="text" id="commitMessage" placeholder="描述本次更改..." required>
+          </div>
+          <div class="form-group">
+            <label>分支</label>
+            <input type="text" id="gitBranch" value="main" placeholder="main">
+          </div>
+          <button type="submit" class="btn btn-success">提交并推送到 GitHub</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>分支管理</h2>
+        <div style="margin-bottom: 15px;">
+          <button class="btn btn-secondary" onclick="loadBranches()">🔄 刷新分支列表</button>
+          <button class="btn btn-primary" onclick="showCreateBranchModal()">➕ 创建新分支</button>
+          <button class="btn btn-success" onclick="showMergeBranchModal()">🔀 合并分支</button>
+        </div>
+        <div id="branchesList" class="loading">点击刷新加载分支列表...</div>
+      </div>
+
+      <div class="card">
+        <h2>暂存列表 (Stash)</h2>
+        <div style="margin-bottom: 15px;">
+          <button class="btn btn-secondary" onclick="loadStashList()">🔄 刷新暂存列表</button>
+        </div>
+        <div id="stashList" class="loading">点击刷新加载暂存列表...</div>
+      </div>
+
+      <div class="card">
+        <h2>远程仓库</h2>
+        <div style="margin-bottom: 15px;">
+          <button class="btn btn-secondary" onclick="loadRemotes()">🔄 刷新远程仓库</button>
+          <button class="btn btn-primary" onclick="showAddRemoteModal()">➕ 添加远程仓库</button>
+        </div>
+        <div id="remotesList" class="loading">点击刷新加载远程仓库...</div>
+      </div>
+
+      <div class="card">
+        <h2>标签管理</h2>
+        <div style="margin-bottom: 15px;">
+          <button class="btn btn-secondary" onclick="loadTags()">🔄 刷新标签列表</button>
+          <button class="btn btn-primary" onclick="showCreateTagModal()">🏷️ 创建标签</button>
+          <button class="btn btn-success" onclick="pushAllTags()">⬆️ 推送所有标签</button>
+        </div>
+        <div id="tagsList" class="loading">点击刷新加载标签列表...</div>
+      </div>
+
+      <div class="card">
+        <h2>最近提交记录</h2>
+        <div id="gitLog" class="loading">加载中...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

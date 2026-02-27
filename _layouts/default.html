@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} - {{ site.title }}</title>
+  <link rel="icon" type="image/x-icon" href="{{ '/assets/images/favicon.ico' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/variables.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/components.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/layout.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/clock.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% if page.url == '/' or page.url == '/index.html' %}
+  <link rel="stylesheet" href="{{ '/assets/css/index.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/github-contributions.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% endif %}
+  {% if page.url == '/links.html' %}
+  <link rel="stylesheet" href="{{ '/assets/css/links.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% endif %}
+  {% if page.url == '/thoughts.html' %}
+  <link rel="stylesheet" href="{{ '/assets/css/thoughts.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% endif %}
+  {% if page.url == '/docs.html' %}
+  <link rel="stylesheet" href="{{ '/assets/css/docsmd.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% endif %}
+  {% if page.url == '/notes.html' %}
+  <link rel="stylesheet" href="{{ '/assets/css/notes.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% endif %}
+  {% if page.layout == 'doc' %}
+  <link rel="stylesheet" href="{{ '/assets/css/docs.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% endif %}
+</head>
+<body>
+  {% include header.html %}
+
+  <main class="container">
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+  <script src="{{ '/assets/js/clock.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  {% if page.url == '/' or page.url == '/index.html' %}
+  <script src="{{ '/assets/js/github-contributions.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  {% endif %}
+</body>
+</html>

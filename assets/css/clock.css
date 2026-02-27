@@ -1,0 +1,111 @@
+/* 首页时钟样式 */
+.profile-clock {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-clock .clock {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-light-90) 0%, var(--color-white-90) 100%);
+  border: 2px solid var(--color-primary-20);
+  position: relative;
+  box-shadow:
+    var(--shadow-inset),
+    0 3px 15px var(--color-primary-15);
+}
+
+.profile-clock .clock::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  background: url('/assets/images/cat.png') no-repeat center center;
+  background-size: contain;
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+
+/* 时钟刻度 */
+.clock-mark {
+  position: absolute;
+  width: 1.5px;
+  height: 5px;
+  background: var(--color-primary-30);
+  left: 50%;
+  top: 5px;
+  transform-origin: center 55px;
+  border-radius: 1px;
+}
+
+.clock-mark.hour-mark {
+  width: 2px;
+  height: 8px;
+  background: var(--gradient-primary);
+  opacity: 0.6;
+}
+
+/* 时钟指针 */
+.clock-hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: center bottom;
+  border-radius: 10px 10px 0 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clock-hour-hand {
+  width: 4px;
+  height: 30px;
+  background: var(--gradient-primary-vertical);
+  margin-left: -2px;
+  z-index: 3;
+  box-shadow: 0 1px 4px var(--color-primary-30);
+}
+
+.clock-minute-hand {
+  width: 3px;
+  height: 42px;
+  background: var(--gradient-secondary-vertical);
+  margin-left: -1.5px;
+  z-index: 2;
+  box-shadow: 0 1px 4px var(--color-secondary-15);
+}
+
+.clock-second-hand {
+  width: 1.5px;
+  height: 50px;
+  background: linear-gradient(180deg, var(--color-accent-red) 0%, rgba(244, 63, 94, 0.8) 100%);
+  margin-left: -0.75px;
+  z-index: 1;
+  box-shadow: 0 1px 3px rgba(244, 63, 94, 0.3);
+}
+
+.clock-digital {
+  font-size: 13px;
+  color: var(--color-text-gray);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.clock-date {
+  font-size: 11px;
+  color: var(--color-text-light);
+  text-align: center;
+}
+
+/* 移动端隐藏时钟 */
+@media (max-width: 768px) {
+  .profile-clock {
+    display: none;
+  }
+}

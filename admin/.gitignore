@@ -1,0 +1,6 @@
+# 管理平台不会被发布
+# admin/ 目录仅用于本地管理
+# 不应提交 node_modules
+node_modules/
+package-lock.json
+*.log

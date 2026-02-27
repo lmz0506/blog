@@ -1,0 +1,670 @@
+---
+layout: default
+---
+
+<div class="doc-wrapper">
+  <!-- 左侧相邻文章导航 - 仅桌面端显示 -->
+  <aside class="doc-neighbors desktop-only">
+    <div class="neighbors-sticky">
+      <h3>相邻文章</h3>
+      <div class="neighbors-list">
+        {% assign all_docs = site.docs | sort: 'date' | reverse %}
+        {% assign current_index = nil %}
+        {% for doc in all_docs %}
+          {% if doc.url == page.url %}
+            {% assign current_index = forloop.index0 %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+
+        {% if current_index %}
+          <!-- 上一篇 -->
+          {% assign prev_index = current_index | minus: 1 %}
+          {% if prev_index >= 0 %}
+            {% assign prev_doc = all_docs[prev_index] %}
+            <div class="neighbor-item prev">
+              <div class="neighbor-label">← 上一篇</div>
+              <a href="{{ prev_doc.url | relative_url }}" class="neighbor-link">
+                <div class="neighbor-title">{{ prev_doc.title }}</div>
+                <div class="neighbor-meta">
+                  <span>{{ prev_doc.category }}</span>
+                  <span>{{ prev_doc.date | date: "%Y-%m-%d" }}</span>
+                </div>
+              </a>
+            </div>
+          {% endif %}
+
+          <!-- 当前文章 -->
+          <div class="neighbor-item current">
+            <div class="neighbor-label">• 当前</div>
+            <div class="neighbor-current">
+              <div class="neighbor-title">{{ page.title }}</div>
+              <div class="neighbor-meta">
+                <span>{{ page.category }}</span>
+                <span>{{ page.date | date: "%Y-%m-%d" }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 下一篇 -->
+          {% assign next_index = current_index | plus: 1 %}
+          {% if next_index < all_docs.size %}
+            {% assign next_doc = all_docs[next_index] %}
+            <div class="neighbor-item next">
+              <div class="neighbor-label">下一篇 →</div>
+              <a href="{{ next_doc.url | relative_url }}" class="neighbor-link">
+                <div class="neighbor-title">{{ next_doc.title }}</div>
+                <div class="neighbor-meta">
+                  <span>{{ next_doc.category }}</span>
+                  <span>{{ next_doc.date | date: "%Y-%m-%d" }}</span>
+                </div>
+              </a>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </aside>
+
+  <article class="doc-article">
+    <!-- 移动端专属头部 -->
+    <div class="mobile-doc-header">
+      <div class="mobile-doc-title-row">
+        <h1 class="mobile-doc-h1">{{ page.title }}</h1>
+        <button class="mobile-articles-toggle" id="mobileArticlesBtn" data-category="{{ page.category }}" style="display: none;">
+          <img src="{{ '/assets/images/catalog_32.png' | relative_url }}" alt="文章列表">
+        </button>
+      </div>
+      <div class="mobile-doc-meta">
+        <span>{{ page.category }}</span>
+        <span>{{ page.date | date: "%Y-%m-%d" }}</span>
+      </div>
+      {% if page.tags %}
+      <div class="doc-tags">
+        {% for tag in page.tags %}
+        <span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- 桌面端头部（保持原样） -->
+    <header class="doc-header desktop-only">
+      <div class="doc-header-row">
+        <h1>{{ page.title }}</h1>
+        <!-- MD源码/渲染视图切换按钮 -->
+        <button id="viewModeBtn" class="view-mode-btn">
+          <span class="mode-icon">🪄</span>
+        </button>
+      </div>
+      <div class="doc-meta">
+        <span>分类: {{ page.category }}</span>
+        <span>更新: {{ page.date | date: "%Y-%m-%d" }}</span>
+      </div>
+      {% if page.tags %}
+      <div class="doc-tags">
+        {% for tag in page.tags %}
+        <span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </header>
+
+    <!-- 移动端目录折叠按钮 -->
+    <div class="mobile-toc-toggle">
+      <button id="mobileTocBtn" class="toc-toggle-btn">
+        <span class="toc-icon">📑</span>
+        <span class="toc-text">目录</span>
+        <span class="toc-arrow">▼</span>
+      </button>
+      <div id="mobileTocContent" class="mobile-toc-content">
+        <nav id="mobileTocNav"></nav>
+      </div>
+    </div>
+
+    <div class="doc-content" id="docContent">
+      {{ content }}
+    </div>
+
+    <!-- Markdown源码视图（默认隐藏） -->
+    <div class="doc-source" id="docSource" style="display: none;">
+      <div style="position: relative;">
+        <button id="copyMarkdownBtn" class="copy-markdown-btn" title="复制全部源码">
+          <span class="copy-icon">📋</span>
+          <span class="copy-text">复制源码</span>
+        </button>
+        <pre><code class="language-markdown" id="markdownSource"></code></pre>
+      </div>
+    </div>
+  </article>
+
+  <aside class="doc-toc">
+    <div class="toc-sticky" id="tocSticky">
+      <h3>目录</h3>
+      <nav id="tocNav"></nav>
+    </div>
+  </aside>
+</div>
+
+<!-- 移动端文章列表侧边栏 -->
+<div class="mobile-articles-sidebar" id="mobileArticlesSidebar">
+  <div class="mobile-articles-header">
+    <h3 id="mobileArticlesCategory"></h3>
+    <button class="mobile-articles-close" id="mobileArticlesClose">×</button>
+  </div>
+  <ul class="mobile-articles-list" id="mobileArticlesList"></ul>
+</div>
+<div class="mobile-articles-overlay" id="mobileArticlesOverlay"></div>
+
+<!-- 移动端悬浮目录按钮 -->
+<button class="mobile-floating-toc-btn" id="mobileFloatingTocBtn">
+  <img src="{{ '/assets/images/catalog_2_32.png' | relative_url }}" alt="目录">
+</button>
+
+<!-- 移动端底部弹出目录 -->
+<div class="mobile-bottom-toc" id="mobileBottomToc">
+  <div class="mobile-bottom-toc-header">
+    <h3>文档目录</h3>
+    <button class="mobile-bottom-toc-close" id="mobileBottomTocClose">×</button>
+  </div>
+  <nav id="mobileBottomTocNav" class="mobile-bottom-toc-nav"></nav>
+</div>
+<div class="mobile-bottom-toc-overlay" id="mobileBottomTocOverlay"></div>
+
+<script>
+  // 生成目录
+  document.addEventListener('DOMContentLoaded', function() {
+    const content = document.getElementById('docContent');
+    const tocNav = document.getElementById('tocNav');
+    const mobileTocNav = document.getElementById('mobileTocNav');
+    const mobileTocToggle = document.querySelector('.mobile-toc-toggle');
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocContent = document.getElementById('mobileTocContent');
+
+    if (!content || !tocNav) return;
+
+    // 获取所有标题
+    const headings = content.querySelectorAll('h2, h3');
+
+    if (headings.length === 0) {
+      document.querySelector('.doc-toc').style.display = 'none';
+      if (mobileTocToggle) {
+        mobileTocToggle.style.display = 'none';
+      }
+      return;
+    }
+
+    // 为每个标题添加ID
+    headings.forEach((heading, index) => {
+      if (!heading.id) {
+        heading.id = 'heading-' + index;
+      }
+    });
+
+    // 生成目录HTML
+    let tocHTML = '<ul class="toc-list">';
+    headings.forEach((heading) => {
+      const level = heading.tagName === 'H2' ? 'toc-level-1' : 'toc-level-2';
+      tocHTML += `
+        <li class="${level}">
+          <a href="#${heading.id}" class="toc-link">${heading.textContent}</a>
+        </li>
+      `;
+    });
+    tocHTML += '</ul>';
+
+    // 同时更新桌面端和移动端目录
+    tocNav.innerHTML = tocHTML;
+    if (mobileTocNav) {
+      mobileTocNav.innerHTML = tocHTML;
+    }
+
+    // 移动端目录折叠功能
+    if (mobileTocBtn && mobileTocContent) {
+      mobileTocBtn.addEventListener('click', function() {
+        const isOpen = mobileTocContent.classList.toggle('open');
+        const arrow = this.querySelector('.toc-arrow');
+        arrow.textContent = isOpen ? '▲' : '▼';
+      });
+
+      // 点击移动端目录链接后自动折叠
+      const mobileTocLinks = mobileTocNav.querySelectorAll('.toc-link');
+      mobileTocLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          mobileTocContent.classList.remove('open');
+          const arrow = mobileTocBtn.querySelector('.toc-arrow');
+          arrow.textContent = '▼';
+        });
+      });
+    }
+
+    // 平滑滚动（桌面端和移动端通用）
+    const allTocLinks = document.querySelectorAll('.toc-link');
+    allTocLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // 更新URL但不滚动
+          history.pushState(null, null, '#' + targetId);
+        }
+      });
+    });
+
+    // 滚动高亮
+    let isScrolling = false;
+
+    function highlightTOC() {
+      if (isScrolling) return;
+
+      let current = '';
+      const scrollPosition = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        const headingTop = heading.offsetTop;
+        if (scrollPosition >= headingTop) {
+          current = heading.id;
+        }
+      });
+
+      allTocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightTOC);
+    highlightTOC(); // 初始化
+
+    // === 移动端功能 ===
+
+    // 1. 从URL获取来源参数，判断是否从知识库进入
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromCategory = urlParams.get('from');
+    const mobileArticlesBtn = document.getElementById('mobileArticlesBtn');
+    const mobileArticlesSidebar = document.getElementById('mobileArticlesSidebar');
+    const mobileArticlesOverlay = document.getElementById('mobileArticlesOverlay');
+    const mobileArticlesClose = document.getElementById('mobileArticlesClose');
+    const mobileArticlesList = document.getElementById('mobileArticlesList');
+    const mobileArticlesCategory = document.getElementById('mobileArticlesCategory');
+
+    // 如果是从知识库进入（有from参数），显示文章列表按钮
+    if (fromCategory && mobileArticlesBtn) {
+      mobileArticlesBtn.style.display = 'flex';
+
+      // 加载该分类的所有文章
+      fetch('/docs.html')
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const docsDataScript = doc.getElementById('docs-data');
+          if (docsDataScript) {
+            const docsData = JSON.parse(docsDataScript.textContent);
+            const categoryDocs = docsData[fromCategory] || [];
+
+            // 更新分类标题
+            mobileArticlesCategory.textContent = fromCategory;
+
+            // 生成文章列表
+            let html = '';
+            categoryDocs.forEach(doc => {
+              const isActive = window.location.pathname === doc.url ? 'active' : '';
+              html += `<li><a href="${doc.url}?from=${encodeURIComponent(fromCategory)}" class="${isActive}">${doc.title}</a></li>`;
+            });
+            mobileArticlesList.innerHTML = html || '<li style="padding: 14px; color: #999;">暂无文档</li>';
+          }
+        })
+        .catch(error => console.error('加载文章列表失败:', error));
+
+      // 点击按钮打开侧边栏
+      mobileArticlesBtn.addEventListener('click', function() {
+        mobileArticlesSidebar.classList.add('open');
+        mobileArticlesOverlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      });
+
+      // 关闭侧边栏
+      function closeMobileArticles() {
+        mobileArticlesSidebar.classList.remove('open');
+        mobileArticlesOverlay.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+
+      mobileArticlesClose.addEventListener('click', closeMobileArticles);
+      mobileArticlesOverlay.addEventListener('click', closeMobileArticles);
+    }
+
+    // 2. 移动端悬浮目录按钮
+    const mobileFloatingTocBtn = document.getElementById('mobileFloatingTocBtn');
+    const mobileBottomToc = document.getElementById('mobileBottomToc');
+    const mobileBottomTocOverlay = document.getElementById('mobileBottomTocOverlay');
+    const mobileBottomTocClose = document.getElementById('mobileBottomTocClose');
+    const mobileBottomTocNav = document.getElementById('mobileBottomTocNav');
+
+    // 复制目录HTML到底部弹出目录
+    if (mobileBottomTocNav && tocHTML) {
+      mobileBottomTocNav.innerHTML = tocHTML;
+    }
+
+    // 打开底部目录
+    if (mobileFloatingTocBtn) {
+      mobileFloatingTocBtn.addEventListener('click', function() {
+        mobileBottomToc.classList.add('open');
+        mobileBottomTocOverlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    // 关闭底部目录
+    function closeMobileBottomToc() {
+      mobileBottomToc.classList.remove('open');
+      mobileBottomTocOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    if (mobileBottomTocClose) {
+      mobileBottomTocClose.addEventListener('click', closeMobileBottomToc);
+    }
+
+    if (mobileBottomTocOverlay) {
+      mobileBottomTocOverlay.addEventListener('click', closeMobileBottomToc);
+    }
+
+    // 点击底部目录链接后跳转并关闭
+    const mobileBottomTocLinks = mobileBottomTocNav.querySelectorAll('.toc-link');
+    mobileBottomTocLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+
+        // 先关闭目录
+        closeMobileBottomToc();
+
+        // 延迟一点跳转，让关闭动画完成
+        setTimeout(() => {
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.pushState(null, null, '#' + targetId);
+          }
+        }, 300);
+      });
+    });
+
+    // 同步底部目录的高亮状态
+    function highlightBottomTOC() {
+      if (!mobileBottomTocLinks.length) return;
+
+      let current = '';
+      const scrollPosition = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        const headingTop = heading.offsetTop;
+        if (scrollPosition >= headingTop) {
+          current = heading.id;
+        }
+      });
+
+      mobileBottomTocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightBottomTOC);
+    highlightBottomTOC(); // 初始化
+
+    // === MD源码/渲染视图切换功能 ===
+    const viewModeBtn = document.getElementById('viewModeBtn');
+    const docContent = document.getElementById('docContent');
+    const docSource = document.getElementById('docSource');
+    const markdownSource = document.getElementById('markdownSource');
+
+    let isSourceMode = false;
+    let rawMarkdown = '';
+
+    // HTML转Markdown - 从渲染的HTML反解析成Markdown
+    function htmlToMarkdown(element) {
+      let markdown = '';
+      const nodes = element.childNodes;
+
+      nodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          // 文本节点直接添加
+          markdown += node.textContent;
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const tag = node.tagName.toLowerCase();
+
+          switch(tag) {
+            case 'h1':
+              markdown += '# ' + node.textContent.trim() + '\n\n';
+              break;
+            case 'h2':
+              markdown += '## ' + node.textContent.trim() + '\n\n';
+              break;
+            case 'h3':
+              markdown += '### ' + node.textContent.trim() + '\n\n';
+              break;
+            case 'h4':
+              markdown += '#### ' + node.textContent.trim() + '\n\n';
+              break;
+            case 'h5':
+              markdown += '##### ' + node.textContent.trim() + '\n\n';
+              break;
+            case 'h6':
+              markdown += '###### ' + node.textContent.trim() + '\n\n';
+              break;
+            case 'p':
+              markdown += htmlToMarkdown(node) + '\n\n';
+              break;
+            case 'strong':
+            case 'b':
+              markdown += '**' + node.textContent + '**';
+              break;
+            case 'em':
+            case 'i':
+              markdown += '*' + node.textContent + '*';
+              break;
+            case 'code':
+              // 检查是否在pre中（代码块）
+              if (node.parentElement.tagName.toLowerCase() !== 'pre') {
+                markdown += '`' + node.textContent + '`';
+              }
+              break;
+            case 'pre':
+              const codeNode = node.querySelector('code');
+              if (codeNode) {
+                const codeText = codeNode.textContent;
+                const langMatch = codeNode.className.match(/language-(\w+)/);
+                const lang = langMatch ? langMatch[1] : '';
+                markdown += '```' + lang + '\n' + codeText + '\n```\n\n';
+              } else {
+                markdown += '```\n' + node.textContent + '\n```\n\n';
+              }
+              break;
+            case 'a':
+              const href = node.getAttribute('href') || '';
+              markdown += '[' + node.textContent + '](' + href + ')';
+              break;
+            case 'img':
+              const src = node.getAttribute('src') || '';
+              const alt = node.getAttribute('alt') || '';
+              markdown += '![' + alt + '](' + src + ')';
+              break;
+            case 'ul':
+              node.querySelectorAll('li').forEach(li => {
+                markdown += '- ' + htmlToMarkdown(li).trim() + '\n';
+              });
+              markdown += '\n';
+              break;
+            case 'ol':
+              node.querySelectorAll('li').forEach((li, index) => {
+                markdown += (index + 1) + '. ' + htmlToMarkdown(li).trim() + '\n';
+              });
+              markdown += '\n';
+              break;
+            case 'li':
+              // 已在ul/ol中处理，这里直接返回内容
+              return htmlToMarkdown(node);
+            case 'blockquote':
+              const quoteLines = htmlToMarkdown(node).trim().split('\n');
+              quoteLines.forEach(line => {
+                markdown += '> ' + line + '\n';
+              });
+              markdown += '\n';
+              break;
+            case 'hr':
+              markdown += '---\n\n';
+              break;
+            case 'table':
+              markdown += convertTableToMarkdown(node) + '\n\n';
+              break;
+            case 'br':
+              markdown += '  \n';
+              break;
+            case 'div':
+            case 'span':
+              // 容器元素，递归处理子元素
+              markdown += htmlToMarkdown(node);
+              break;
+            default:
+              // 其他元素递归处理
+              markdown += htmlToMarkdown(node);
+          }
+        }
+      });
+
+      return markdown;
+    }
+
+    // 表格转Markdown
+    function convertTableToMarkdown(table) {
+      let markdown = '';
+      const rows = table.querySelectorAll('tr');
+
+      rows.forEach((row, rowIndex) => {
+        const cells = row.querySelectorAll('th, td');
+        const cellTexts = Array.from(cells).map(cell => cell.textContent.trim());
+
+        markdown += '| ' + cellTexts.join(' | ') + ' |\n';
+
+        // 在表头后添加分隔行
+        if (rowIndex === 0) {
+          markdown += '| ' + cellTexts.map(() => '---').join(' | ') + ' |\n';
+        }
+      });
+
+      return markdown;
+    }
+
+    // 生成Markdown源码
+    function generateMarkdownSource() {
+      if (rawMarkdown) return; // 已生成过
+
+      try {
+        // 从页面信息生成Front Matter
+        const frontMatter = `---
+layout: doc
+title: {{ page.title }}
+category: {{ page.category }}
+date: {{ page.date | date: "%Y-%m-%d" }}
+{% if page.tags %}tags:
+{% for tag in page.tags %}  - {{ tag }}
+{% endfor %}{% endif %}---
+
+`;
+
+        // 从HTML内容转换为Markdown
+        const contentMarkdown = htmlToMarkdown(docContent);
+
+        rawMarkdown = frontMatter + contentMarkdown;
+        markdownSource.textContent = rawMarkdown;
+      } catch (error) {
+        console.error('生成Markdown源码失败:', error);
+        markdownSource.textContent = '生成Markdown源码失败: ' + error.message;
+      }
+    }
+
+    // 切换视图模式
+    if (viewModeBtn) {
+      viewModeBtn.addEventListener('click', function() {
+        isSourceMode = !isSourceMode;
+
+        if (isSourceMode) {
+          // 切换到源码模式
+          generateMarkdownSource();
+          docContent.style.display = 'none';
+          docSource.style.display = 'block';
+          this.querySelector('.mode-icon').textContent = '👁️';
+          this.title = '查看渲染';
+        } else {
+          // 切换回渲染模式
+          docContent.style.display = 'block';
+          docSource.style.display = 'none';
+          this.querySelector('.mode-icon').textContent = '🪄';
+          this.title = '查看源码';
+        }
+      });
+
+      // 初始化tooltip
+      viewModeBtn.title = '查看源码';
+    }
+
+    // 复制Markdown源码功能
+    const copyMarkdownBtn = document.getElementById('copyMarkdownBtn');
+    if (copyMarkdownBtn) {
+      copyMarkdownBtn.addEventListener('click', async function() {
+        const sourceText = markdownSource.textContent;
+
+        try {
+          await navigator.clipboard.writeText(sourceText);
+
+          // 显示成功反馈
+          const originalText = this.querySelector('.copy-text').textContent;
+          this.querySelector('.copy-text').textContent = '已复制!';
+          this.querySelector('.copy-icon').textContent = '✅';
+          this.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+
+          // 2秒后恢复
+          setTimeout(() => {
+            this.querySelector('.copy-text').textContent = originalText;
+            this.querySelector('.copy-icon').textContent = '📋';
+            this.style.background = '';
+          }, 2000);
+        } catch (error) {
+          // 降级方案：使用旧的 execCommand
+          const textArea = document.createElement('textarea');
+          textArea.value = sourceText;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-9999px';
+          document.body.appendChild(textArea);
+          textArea.select();
+
+          try {
+            document.execCommand('copy');
+            this.querySelector('.copy-text').textContent = '已复制!';
+            this.querySelector('.copy-icon').textContent = '✅';
+            this.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+
+            setTimeout(() => {
+              this.querySelector('.copy-text').textContent = '复制源码';
+              this.querySelector('.copy-icon').textContent = '📋';
+              this.style.background = '';
+            }, 2000);
+          } catch (err) {
+            alert('复制失败，请手动选择复制');
+          }
+
+          document.body.removeChild(textArea);
+        }
+      });
+    }
+  });
+</script>

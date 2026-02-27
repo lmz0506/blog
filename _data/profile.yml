@@ -1,0 +1,37 @@
+name: 李明洲
+bio: 不曾养性与修真，混沌迷心熬日月
+avatar: /assets/images/avatar.jpg
+intro: |
+  日日如梭，认真对待
+skills:
+  - name: 前端
+    items:
+      - TypeScript
+      - Vue.js
+  - name: 后端
+    items:
+      - Python
+      - Spring Boot
+      - Java
+      - Spring Cloud
+      - LangChain
+      - LangGraph
+  - name: 数据库
+    items:
+      - MySQL
+      - PostgreSQL
+      - Redis
+  - name: 工具
+    items:
+      - Git
+      - Docker
+      - Shell
+currently:
+  - AI带着我写点小工具项目
+  - 学习学习-考本科
+  - 撰写技术博客
+social:
+  github: https://github.com/lmz0506
+  gitee: https://gitee.com/Mzhoulee
+  email: 702142322@qq.com
+  twitter: ''

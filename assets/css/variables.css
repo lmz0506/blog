@@ -1,0 +1,176 @@
+/* CSS 变量定义 - 统一设计系统 */
+:root {
+  /* ========================================
+     主色系 - Primary Colors
+     ======================================== */
+  --color-primary: #667eea;
+  --color-secondary: #764ba2;
+
+  /* 主色透明度变体 */
+  --color-primary-05: rgba(102, 126, 234, 0.05);
+  --color-primary-08: rgba(102, 126, 234, 0.08);
+  --color-primary-10: rgba(102, 126, 234, 0.1);
+  --color-primary-12: rgba(102, 126, 234, 0.12);
+  --color-primary-15: rgba(102, 126, 234, 0.15);
+  --color-primary-18: rgba(102, 126, 234, 0.18);
+  --color-primary-20: rgba(102, 126, 234, 0.2);
+  --color-primary-30: rgba(102, 126, 234, 0.3);
+  --color-primary-40: rgba(102, 126, 234, 0.4);
+  --color-primary-50: rgba(102, 126, 234, 0.5);
+  --color-primary-60: rgba(102, 126, 234, 0.6);
+
+  /* 次色透明度变体 */
+  --color-secondary-05: rgba(118, 75, 162, 0.05);
+  --color-secondary-15: rgba(118, 75, 162, 0.15);
+  --color-secondary-80: rgba(118, 75, 162, 0.8);
+
+  /* ========================================
+     渐变色 - Gradients
+     ======================================== */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-primary-reverse: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  --gradient-primary-light: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  --gradient-primary-15: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  --gradient-primary-vertical: linear-gradient(180deg, #667eea 0%, rgba(102, 126, 234, 0.8) 100%);
+  --gradient-secondary-vertical: linear-gradient(180deg, #764ba2 0%, rgba(118, 75, 162, 0.8) 100%);
+  --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+
+  /* ========================================
+     中性色 - Neutral Colors
+     ======================================== */
+  /* 白色系 */
+  --color-white: #ffffff;
+  --color-white-30: rgba(255, 255, 255, 0.3);
+  --color-white-40: rgba(255, 255, 255, 0.4);
+  --color-white-65: rgba(255, 255, 255, 0.65);
+  --color-white-70: rgba(255, 255, 255, 0.7);
+  --color-white-75: rgba(255, 255, 255, 0.75);
+  --color-white-80: rgba(255, 255, 255, 0.8);
+  --color-white-85: rgba(255, 255, 255, 0.85);
+  --color-white-90: rgba(255, 255, 255, 0.9);
+  --color-white-95: rgba(255, 255, 255, 0.95);
+  --color-white-98: rgba(255, 255, 255, 0.98);
+
+  /* 浅色背景 */
+  --color-light: #f8f9fc;
+  --color-light-50: rgba(248, 249, 252, 0.5);
+  --color-light-60: rgba(248, 249, 252, 0.6);
+  --color-light-80: rgba(248, 249, 252, 0.8);
+  --color-light-90: rgba(248, 249, 252, 0.9);
+
+  --color-light-blue: #f1f5f9;
+  --color-light-blue-50: rgba(241, 245, 249, 0.5);
+  --color-light-blue-80: rgba(241, 245, 249, 0.8);
+
+  /* ========================================
+     文本色 - Text Colors
+     ======================================== */
+  --color-text-dark: #2d3748;
+  --color-text-primary: #1e293b;
+  --color-text-medium: #475569;
+  --color-text-gray: #64748b;
+  --color-text-light: #94a3b8;
+  --color-text-muted: #666;
+  --color-text-nav: #333;
+
+  /* ========================================
+     边框色 - Border Colors
+     ======================================== */
+  --color-border: #e2e8f0;
+  --color-border-light: #e1e4e8;
+  --color-border-lighter: rgba(226, 232, 240, 0.3);
+
+  /* ========================================
+     链接色 - Link Colors
+     ======================================== */
+  --color-link: #0366d6;
+  --color-error: #ef4444;
+  --color-accent-red: #f43f5e;
+
+  /* ========================================
+     覆盖色 - Overlay Colors
+     ======================================== */
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-overlay-light: rgba(0, 0, 0, 0.15);
+  --color-overlay-dark: rgba(0, 0, 0, 0.3);
+
+  /* ========================================
+     阴影系统 - Shadows
+     ======================================== */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 4px 16px var(--color-primary-08);
+  --shadow-card-hover: 0 8px 24px var(--color-primary-12);
+  --shadow-md: 0 8px 32px var(--color-primary-10);
+  --shadow-lg: 0 12px 40px var(--color-primary-15);
+  --shadow-xl: 0 12px 40px var(--color-primary-18);
+  --shadow-focus: 0 6px 25px var(--color-primary-50);
+  --shadow-btn: 0 2px 8px var(--color-primary-20);
+  --shadow-btn-hover: 0 4px 12px var(--color-primary-30);
+  --shadow-inset: inset 0 2px 8px var(--color-primary-10);
+  --shadow-top: 0 -4px 20px var(--color-overlay-light);
+
+  /* ========================================
+     圆角系统 - Border Radius
+     ======================================== */
+  --radius-xs: 2px;
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+  --radius-full: 50%;
+
+  /* ========================================
+     过渡系统 - Transitions
+     ======================================== */
+  --transition-fast: all 0.2s ease;
+  --transition-normal: all 0.3s ease;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-color: color 0.3s ease;
+  --transition-transform: transform 0.3s ease;
+  --transition-expand: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ========================================
+     模糊效果 - Blur Effects
+     ======================================== */
+  --blur-sm: blur(10px);
+  --blur-md: blur(15px);
+  --blur-lg: blur(20px);
+
+  /* ========================================
+     布局系统 - Layout
+     ======================================== */
+  --container-max-width: 1000px;
+  --container-max-width-lg: 1400px;
+  --container-padding: 20px;
+  --container-padding-tablet: 15px;
+  --container-padding-mobile: 8px;
+
+  --gap-xs: 6px;
+  --gap-sm: 10px;
+  --gap-md: 16px;
+  --gap-lg: 20px;
+  --gap-xl: 30px;
+
+  /* ========================================
+     Z-index 层级
+     ======================================== */
+  --z-sticky: 100;
+  --z-header: 1000;
+  --z-floating: 1000;
+  --z-overlay: 9998;
+  --z-modal: 9999;
+
+  /* ========================================
+     字体系统 - Typography
+     ======================================== */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Consolas", "Monaco", "Courier New", monospace;
+  --line-height: 1.6;
+  --line-height-tight: 1.3;
+  --line-height-relaxed: 1.8;
+}

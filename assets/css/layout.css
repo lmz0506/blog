@@ -1,0 +1,211 @@
+/* 页眉样式 */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+  z-index: var(--z-header);
+}
+
+.main-nav {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: var(--gap-xl);
+}
+
+.nav-menu a {
+  color: var(--color-text-nav);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition-color);
+}
+
+.nav-menu a:hover {
+  color: var(--color-link);
+}
+
+/* 导航下拉菜单 - 仅桌面端 */
+@media (min-width: 769px) {
+  .nav-has-dropdown {
+    position: relative;
+  }
+
+  .nav-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 8px 0;
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    min-width: 160px;
+    z-index: 1000;
+  }
+
+  .nav-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+  }
+
+  .nav-has-dropdown:hover .nav-dropdown {
+    display: block;
+  }
+
+  .nav-dropdown li {
+    padding: 0;
+  }
+
+  .nav-dropdown a {
+    display: block;
+    padding: 8px 20px;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: var(--transition-normal);
+  }
+
+  .nav-dropdown a:hover {
+    background: var(--color-primary-10);
+  }
+}
+
+/* 移动端隐藏下拉菜单 */
+@media (max-width: 768px) {
+  .nav-dropdown {
+    display: none;
+  }
+}
+
+/* 页脚样式 */
+.site-footer {
+  background: var(--color-white);
+  margin-top: 60px;
+  padding: 30px 0;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.footer-content {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.footer-content p {
+  margin: 5px 0;
+}
+
+.footer-content a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.footer-content a:hover {
+  text-decoration: underline;
+}
+
+/* GitHub角标 */
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out;
+}
+
+@keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+  40%, 80% {
+    transform: rotate(10deg);
+  }
+}
+
+/* 移动端优化 - 平板 */
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 0 70px 0 15px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .nav-menu {
+    gap: var(--gap-lg);
+    font-size: 14px;
+  }
+}
+
+/* 移动端优化 - 手机 */
+@media (max-width: 480px) {
+  /* 隐藏右上角 GitHub 角标 */
+  .github-corner {
+    display: none;
+  }
+
+  .main-nav {
+    padding: 0 15px 0 10px;
+    height: 50px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .nav-menu {
+    gap: var(--gap-sm);
+    font-size: 12px;
+  }
+
+  .nav-menu li a {
+    padding: 4px 6px;
+  }
+
+  .site-footer {
+    margin-top: 40px;
+    padding: 20px 0;
+  }
+
+  .footer-content {
+    padding: 0 var(--container-padding-tablet);
+    font-size: 13px;
+  }
+
+  .footer-content p {
+    margin: 3px 0;
+  }
+
+  .github-corner svg {
+    width: 50px;
+    height: 50px;
+  }
+}

@@ -1,0 +1,194 @@
+/* 手札页面样式 */
+.notes-page {
+  background: var(--color-white-70);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border: 1px solid var(--color-white-30);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+/* 头部 */
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--color-light-60);
+  border-bottom: 1px solid var(--color-primary-15);
+}
+
+.notes-current-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+/* 移动端切换下拉 - 桌面端隐藏 */
+.notes-mobile-select {
+  display: none;
+}
+
+/* 操作按钮组 */
+.notes-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notes-action-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--color-primary);
+  background: var(--color-primary-10);
+  border: none;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.notes-action-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.fullscreen-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+/* 内容面板 */
+.notes-content {
+  position: relative;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: var(--color-white);
+}
+
+.notes-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* 语雀 iframe */
+.yuque-iframe {
+  width: 100%;
+  height: calc(100vh - 180px);
+  min-height: 600px;
+  border: none;
+  background: var(--color-white);
+  display: block;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: height 0.3s ease;
+}
+
+/* 移动端遮盖语雀页脚 */
+@media (max-width: 768px) {
+  .notes-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 130px;
+    background: linear-gradient(to bottom, transparent 0%, white 30%, white 100%);
+    pointer-events: none;
+    z-index: 10;
+  }
+}
+
+/* ========== 最大化模式 ========== */
+.notes-maximized {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  border-radius: 0;
+  margin: 0;
+}
+
+.notes-maximized .yuque-iframe {
+  height: calc(100vh - 120px);
+  min-height: calc(100vh - 120px);
+}
+
+/* ========== 移动端优化 ========== */
+@media (max-width: 768px) {
+  .notes-header {
+    padding: 10px 16px;
+  }
+
+  /* 移动端隐藏文字名称，显示下拉选择 */
+  .notes-current-name {
+    display: none;
+  }
+
+  .notes-mobile-select {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    padding: 8px 32px 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    background: var(--color-white);
+    border: 1px solid var(--color-primary-20);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  .notes-action-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  /* 移动端隐藏最大化按钮 */
+  #notes-fullscreen-btn {
+    display: none;
+  }
+
+  .yuque-iframe {
+    height: calc(100vh - 180px);
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notes-page {
+    border-radius: var(--radius-lg);
+  }
+
+  .notes-header {
+    padding: 8px 12px;
+  }
+
+  .notes-current-name {
+    font-size: 13px;
+  }
+
+  .notes-action-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .yuque-iframe {
+    height: calc(100vh - 160px);
+    min-height: 450px;
+  }
+}

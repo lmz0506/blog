@@ -1,0 +1,61 @@
+- name: yuque-dl
+  description: 语雀知识库下载为本地markdown
+  url: https://github.com/gxr404/yuque-dl
+  tags:
+    - 下载
+    - 语雀
+    - 使用工具
+  addtime: 2026-01-14 10:09
+- name: ArchiveBox
+  description: 一个开源、自托管的网页归档工具，能将你提供的网页链接保存成多种格式
+  url: https://github.com/ArchiveBox/ArchiveBox
+  tags:
+    - 归档
+  addtime: 2025-12-24 16:42
+- name: code-server
+  description: VS Code in the browser
+  url: https://github.com/coder/code-server
+  tags:
+    - ide
+    - 在线编辑器
+  addtime: 2025-12-24 11:42
+- name: langshift
+  description: 专为开发者打造的编程语言学习平台。通过对比学习掌握新语言。具有交互式编辑器、性能监测功能以及多语言支持。
+  url: https://github.com/erweixin/langshift.dev
+  tags:
+    - 代码学习
+  addtime: 2025-10-24 11:41
+- name: strapi
+  description: 面向人工智能驱动的网站和应用程序的开源无界面内容管理系统设计您的数据模型，立即生成 API，并与您喜爱的框架集成
+  url: https://github.com/strapi/strapi
+  tags:
+    - 接口
+    - 内容管理
+  addtime: 2025-12-24 11:39
+- name: excalidraw
+  description: 一款开源的虚拟手绘风格白板。支持协作且全程加密。
+  url: https://github.com/excalidraw/excalidraw
+  tags:
+    - 白板
+  addtime: 2024-12-24 11:33
+- name: drawnix
+  description: 开源白板工具（SaaS），一体化白板，包含思维导图、流程图、自由画等
+  url: https://github.com/plait-board/drawnix
+  tags:
+    - 思维导图
+    - 会议
+    - 白板
+  addtime: 2023-11-24 11:19
+- name: DualQRCode
+  description: 生成包含两个 URL 的二维码，不同角度扫描，返回的 URL 不一样
+  url: https://github.com/tailwindlabs/tailwindcss
+  tags:
+    - 二维码
+  addtime: 2023-10-24 11:20
+- name: Malware-Patch
+  description: 阻止中国流氓软件的管理员授权
+  url: https://github.com/the1812/Malware-Patch
+  tags:
+    - windows
+    - 使用工具
+  addtime: 2023-09-24 11:20

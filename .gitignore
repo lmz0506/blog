@@ -1,0 +1,9 @@
+/_site
+/dist
+/dist.tar.gz
+/.jekyll-cache
+/.bundle
+/.idea/
+/jekyll_preview.html
+/jekyll_personal_site.md
+/admin/_site/

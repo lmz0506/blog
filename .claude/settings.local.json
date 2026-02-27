@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(tree:*)",
+      "Bash(ruby -v:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:doc.tannn.cn)",
+      "Read(//mnt/c/Users/tan/Downloads/**)",
+      "Bash(bundle exec jekyll serve:*)",
+      "Bash(./blog.sh:*)",
+      "WebFetch(domain:www.yuque.com)",
+      "Bash(find:*)",
+      "Bash(bundle exec jekyll build:*)",
+      "Read(///**)",
+      "Bash(awk:*)",
+      "WebSearch",
+      "Bash(bash:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

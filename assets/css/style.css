@@ -1,0 +1,192 @@
+/* 基础样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  line-height: var(--line-height);
+  color: var(--color-text-dark);
+  background: var(--gradient-bg);
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--container-padding);
+  min-height: calc(100vh - 250px);
+}
+
+/* 平板设备优化 */
+@media (max-width: 768px) {
+  body {
+    padding-top: 60px;
+  }
+
+  .container {
+    padding: var(--container-padding-tablet);
+  }
+}
+
+.content-section {
+  background: var(--color-white-65);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border: 1px solid var(--color-white-30);
+  padding: 35px;
+  border-radius: var(--radius-2xl);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-normal);
+}
+
+.content-section:hover {
+  background: var(--color-white-80);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+  border-color: var(--color-primary-20);
+}
+
+.content-section h2 {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-border);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.content-section h2::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-xs);
+}
+
+.content-section ul {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.content-section li {
+  margin: 8px 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  color: var(--color-text-medium);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  margin: 0;
+  font-weight: 500;
+  transition: var(--transition-normal);
+  box-shadow: var(--shadow-xs);
+}
+
+/* 技术栈标签颜色 */
+.tag[data-tag*="java"],.tag[data-tag*="Java"] {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.tag[data-tag*="spring"],.tag[data-tag*="Spring"] {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+.tag[data-tag*="react"],.tag[data-tag*="React"] {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e3a8a;
+}
+
+.tag[data-tag*="vue"],.tag[data-tag*="Vue"] {
+  background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
+  color: #064e3b;
+}
+
+.tag[data-tag*="node"],.tag[data-tag*="Node"] {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #14532d;
+}
+
+.tag[data-tag*="docker"],.tag[data-tag*="Docker"] {
+  background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+  color: #1e3a8a;
+}
+
+.tag[data-tag*="python"],.tag[data-tag*="Python"] {
+  background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+  color: #78350f;
+}
+
+.tag[data-tag*="typescript"],.tag[data-tag*="TypeScript"],.tag[data-tag*="ts"] {
+  background: linear-gradient(135deg, #dbeafe 0%, #60a5fa 100%);
+  color: #1e3a8a;
+}
+
+.tag[data-tag*="javascript"],.tag[data-tag*="JavaScript"],.tag[data-tag*="js"] {
+  background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+  color: #78350f;
+}
+
+.tag[data-tag*="mysql"],.tag[data-tag*="MySQL"],.tag[data-tag*="database"] {
+  background: linear-gradient(135deg, #dbeafe 0%, #3b82f6 100%);
+  color: #1e3a8a;
+}
+
+.tag[data-tag*="redis"],.tag[data-tag*="Redis"] {
+  background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+  color: #7f1d1d;
+}
+
+.tag[data-tag*="git"],.tag[data-tag*="Git"] {
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+  color: #7c2d12;
+}
+
+.tag[data-tag*="css"],.tag[data-tag*="CSS"] {
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  color: #3730a3;
+}
+
+.tag[data-tag*="html"],.tag[data-tag*="HTML"] {
+  background: linear-gradient(135deg, #fed7aa 0%, #fb923c 100%);
+  color: #7c2d12;
+}
+
+.tag[data-tag*="golang"],.tag[data-tag*="go"],.tag[data-tag*="Go"] {
+  background: linear-gradient(135deg, #dbeafe 0%, #7dd3fc 100%);
+  color: #0c4a6e;
+}
+
+.tag[data-tag*="kubernetes"],.tag[data-tag*="k8s"] {
+  background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+  color: #4c1d95;
+}
+
+.tag[data-tag*="aws"],.tag[data-tag*="AWS"] {
+  background: linear-gradient(135deg, #fed7aa 0%, #fb923c 100%);
+  color: #7c2d12;
+}
+
+.tag:hover {
+  background: var(--gradient-primary);
+  color: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--color-primary-30);
+}
+
+/* GitHub 项目样式 */
+@import "github-projects.css";

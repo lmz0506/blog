@@ -1,0 +1,59 @@
+title: lbcontinent
+description: 个人主页 & 知识库
+baseurl: ""
+url: https://github.com/lmz0506/blog
+
+# 集合配置
+collections:
+  docs:
+    output: true
+    permalink: /docs/:path/
+
+# 默认设置
+defaults:
+  - scope:
+      path: ""
+      type: docs
+    values:
+      layout: doc
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# 构建设置
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+  hard_wrap: false
+  auto_ids: true
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+
+# 排除文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - blog.sh
+  - jekyll_personal_site.md
+  - jekyll_preview.html
+  - admin/                    # 排除管理平台
+
+# Footer配置
+footer_text: "© 2025 lmz. All rights reserved."
+footer_powered_by: true
+footer_powered_by_text: "Powered by"
+footer_powered_by_name: "lbcontinent"
+footer_powered_by_link: "https://github.com/lmz0506"
+github_url: https://github.com/lmz0506/blog
+
+# 百度统计配置
+baidu_analytics: "c630ecba9d6dc3f9cc2372632e2508f0"
+
+# 不蒜子访问量统计
+busuanzi_counter: true

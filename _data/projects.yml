@@ -1,0 +1,15 @@
+- name: 个人博客系统
+  description: 基于 Jekyll 的个人博客，支持知识库管理
+  url: https://github.com/lmz0506/blog.git
+  tags:
+    - Jekyll
+    - Ruby
+    - Markdown
+  star: true
+- name: 代码书架
+  description: 随着开发者参与的项目日益增多，本地存储着大量的代码仓库。这些项目分散在不同目录，管理和维护变得愈发困难。开发者常常面临以下困境
+  url: https://github.com/en-o/codeshelf
+  tags:
+    - 项目管理
+    - GIT
+  star: true
