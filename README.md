@@ -18,7 +18,7 @@
 
 ## 📸 预览
 
-访问地址: [http://doc.lmz.cn/](http://doc.lmz.cn/)
+访问地址: [http://doc.lmzfly.xyz/](http://doc.lmzfly.xyz/)
 
 ## 🚀 快速开始
 
@@ -242,7 +242,7 @@ permalink: /about.html
 ```yaml
 title: 我的个人主页
 description: 个人主页 & 知识库
-url: https://doc.lmz.cn
+url: https://doc.lmzfly.xyz
 baseurl: ""  # 子目录部署时填写，如 /blog
 
 github_url: https://github.com/yourusername
@@ -309,7 +309,7 @@ git push origin main
 
 1. 编辑 `CNAME` 文件，填入你的域名：
    ```
-   doc.lmz.cn
+   doc.lmzfly.xyz
    ```
 
 2. 在域名提供商处添加 DNS 记录：
@@ -393,4 +393,4 @@ MIT License
 
 ---
 
-如有问题，欢迎提 [Issue](https://github.com/en-o/blog/issues) 或访问[在线预览](http://doc.lmz.cn/)查看效果。
+如有问题，欢迎提 [Issue](https://github.com/en-o/blog/issues) 或访问[在线预览](http://doc.lmzfly.xyz/)查看效果。
