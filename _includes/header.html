@@ -1,22 +1,13 @@
 <header class="site-header">
   <nav class="main-nav">
-    <a href="/" class="logo">{{ site.title }}</a>
+    <a href="{{ '/' | relative_url }}" class="logo">
+      <span class="logo-mark">l</span>
+      <span class="logo-text">{{ site.title }}</span>
+    </a>
     <ul class="nav-menu">
-      <li><a href="/">首页</a></li>
-      <li><a href="/docs.html">知识库</a></li>
-<!--      <li class="nav-has-dropdown">-->
-<!--        <a href="/notes.html">手札</a>-->
-<!--        {% if site.data.notes.size > 0 %}-->
-<!--        <ul class="nav-dropdown">-->
-<!--          {% for note in site.data.notes %}-->
-<!--          <li><a href="/notes.html#{{ note.name }}" data-note-url="{{ note.url }}">{{ note.icon }} {{ note.name }}</a></li>-->
-<!--          {% endfor %}-->
-<!--        </ul>-->
-<!--        {% endif %}-->
-<!--      </li>-->
-      <li><a href="/github.html">GitHub</a></li>
-      <li><a href="/thoughts.html">碎碎念</a></li>
-      <li><a href="/links.html">友链</a></li>
+      <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' or page.url == '/index.html' %}class="active"{% endif %}>首页</a></li>
+      <li><a href="{{ '/docs.html' | relative_url }}" {% if page.url == '/docs.html' or page.layout == 'doc' %}class="active"{% endif %}>知识库</a></li>
+      <li><a href="{{ '/github.html' | relative_url }}" {% if page.url == '/github.html' %}class="active"{% endif %}>精选开源</a></li>
     </ul>
   </nav>
 </header>

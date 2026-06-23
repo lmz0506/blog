@@ -1,5 +1,13 @@
+{% assign is_home = false %}
+{% if page.url == '/' or page.url == '/index.html' %}
+  {% assign is_home = true %}
+{% endif %}
+{% assign is_wide_flow = false %}
+{% if page.url == '/docs.html' or page.url == '/github.html' or page.layout == 'doc' %}
+  {% assign is_wide_flow = true %}
+{% endif %}
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN"{% if is_home %} class="scroll-smooth"{% endif %}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +18,34 @@
   <link rel="stylesheet" href="{{ '/assets/css/layout.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <link rel="stylesheet" href="{{ '/assets/css/clock.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-  {% if page.url == '/' or page.url == '/index.html' %}
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  {% if is_home %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+            serif: ['Playfair Display', 'Noto Serif SC', 'Georgia', 'serif']
+          }
+        }
+      }
+    }
+  </script>
   <link rel="stylesheet" href="{{ '/assets/css/index.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-  <link rel="stylesheet" href="{{ '/assets/css/github-contributions.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   {% endif %}
   {% if page.url == '/links.html' %}
   <link rel="stylesheet" href="{{ '/assets/css/links.css' | relative_url }}?v={{ site.time | date: '%s' }}">
@@ -30,17 +63,26 @@
   <link rel="stylesheet" href="{{ '/assets/css/docs.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   {% endif %}
 </head>
-<body>
+<body class="{% if is_home %}home-ui-body bg-[#f8fafc] text-slate-800 dark:bg-[#070a12] dark:text-slate-200 min-h-screen font-sans antialiased selection:bg-brand-500 selection:text-white theme-transition relative overflow-x-hidden{% elsif is_wide_flow %}wide-flow-page{% endif %}">
+  {% unless is_home %}
   {% include header.html %}
+  {% endunless %}
 
+  {% if is_home %}
+    {{ content }}
+    {% include github-corner.html %}
+  {% else %}
   <main class="container">
     {{ content }}
   </main>
+  {% endif %}
 
   {% include footer.html %}
   <script src="{{ '/assets/js/clock.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
-  {% if page.url == '/' or page.url == '/index.html' %}
-  <script src="{{ '/assets/js/github-contributions.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
-  {% endif %}
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
 </body>
 </html>

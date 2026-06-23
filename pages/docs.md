@@ -4,98 +4,102 @@ title: 知识库
 permalink: /docs.html
 ---
 
-<div class="docs-page-wrapper">
-  <!-- 移动端专属布局 -->
-  <div class="docs-mobile-layout">
-    <!-- 第一块：最近文档 -->
-    <section class="mobile-recent-docs">
-      <h3 class="mobile-section-title">最近更新</h3>
-      <div class="mobile-recent-grid">
-        {% assign all_docs = site.docs | sort: 'date' | reverse %}
-        {% assign recent_docs = all_docs | slice: 0, 3 %}
-        {% for doc in recent_docs %}
-        <a href="{{ doc.url }}" class="mobile-recent-card">
-          <img src="{{ '/assets/images/book_text_128.png' | relative_url }}" alt="{{ doc.title }}">
-          <span class="mobile-recent-title">{{ doc.title }}</span>
-        </a>
-        {% endfor %}
-      </div>
-    </section>
+{% assign docs_by_category = site.docs | group_by: "category" %}
+{% assign recent_docs = site.docs | sort: "date" | reverse %}
+{% assign first_category = docs_by_category.first %}
 
-    <!-- 第二块：知识库分类 -->
-    <section class="mobile-categories">
-      <h3 class="mobile-section-title">知识库</h3>
-      <div class="mobile-category-grid">
-        {% assign docs_by_category = site.docs | group_by: "category" %}
-        {% for category in docs_by_category %}
-        <div class="mobile-category-card" data-category="{{ category.name }}">
-          <img src="{{ '/assets/images/book_128.svg' | relative_url }}" alt="{{ category.name }}" class="category-icon" data-color-index="{{ forloop.index }}">
-          <span class="mobile-category-name">{{ category.name }}</span>
-          <span class="mobile-category-count">{{ category.items | size }}篇</span>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
+<div class="docs-redesign">
+  <section class="docs-hero-panel">
+    <div>
+      <span class="docs-kicker">Knowledge Flow</span>
+      <h1>知识库</h1>
+    </div>
+    <div class="docs-hero-stat">
+      <strong>{{ site.docs.size }}</strong>
+      <span>篇文章</span>
+    </div>
+  </section>
 
-    <!-- 第三块：文档列表（点击分类后显示） -->
-    <section class="mobile-docs-list" id="mobile-docs-section" style="display: none;">
-      <div class="mobile-docs-header">
-        <button class="mobile-back-btn" id="mobile-back-btn">← 返回</button>
-        <h3 class="mobile-docs-title" id="mobile-current-category"></h3>
-      </div>
-      <ul class="mobile-doc-items" id="mobile-doc-list"></ul>
-    </section>
-  </div>
-
-  <!-- 桌面端布局（保持原样） -->
-  <aside class="docs-sidebar">
-    <div class="docs-sidebar-sticky">
-      <h3>分类</h3>
-      <nav class="category-nav">
-        <ul class="category-list">
-          {% assign docs_by_category = site.docs | group_by: "category" %}
+  <div class="docs-flow-layout">
+    <aside class="docs-sidebar-panel">
+      <div class="docs-sidebar-sticky">
+        <span class="docs-kicker">Categories</span>
+        <h2>分类导航</h2>
+        <div class="docs-category-list">
           {% for category in docs_by_category %}
-          <li class="category-item {% if forloop.first %}active{% endif %}" data-category="{{ category.name }}">
-            <span class="category-name">{{ category.name }}</span>
-            <span class="category-count">{{ category.items | size }}</span>
-          </li>
+          <button
+            class="docs-category-button {% if forloop.first %}active{% endif %}"
+            type="button"
+            data-category="{{ category.name }}">
+            <strong>{{ category.name | default: "未分类" }}</strong>
+            <span>{{ category.items | size }} 篇</span>
+          </button>
           {% endfor %}
-        </ul>
-      </nav>
-    </div>
-  </aside>
+        </div>
+      </div>
+    </aside>
 
-  <div class="docs-main">
-    <div class="content-section">
-      <div id="docs-list-container">
-        {% assign docs_by_category = site.docs | group_by: "category" %}
-        {% assign first_category = docs_by_category.first %}
+    <section class="docs-main-panel">
+      <div class="docs-stage-card">
+        <div class="docs-stage-head">
+          <div>
+            <span class="docs-kicker">Directory</span>
+            <h2 id="docs-current-title">{{ first_category.name | default: "未分类" }}</h2>
+          </div>
+          <span class="docs-count" id="docs-current-count">{{ first_category.items | size }} 篇内容</span>
+        </div>
+        <div class="docs-river" id="docs-river">
+          {% assign first_docs = first_category.items | sort: "date" | reverse %}
+          {% for doc in first_docs %}
+          <article class="docs-river-item">
+            <div class="docs-river-index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</div>
+            <div class="docs-river-main">
+              <h3><a href="{{ doc.url | relative_url }}">{{ doc.title }}</a></h3>
+              <div class="docs-river-meta">
+                <span>{{ doc.date | date: "%Y-%m-%d" }}</span>
+                {% if doc.tags and doc.tags.size > 0 %}
+                <span>{{ doc.tags | join: " / " }}</span>
+                {% endif %}
+              </div>
+            </div>
+            <a class="docs-open-link" href="{{ doc.url | relative_url }}" aria-label="阅读 {{ doc.title }}">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
 
-        <h2 id="current-category-title">{{ first_category.name }}</h2>
-
-        <ul class="doc-list" id="doc-list">
-          {% for doc in first_category.items %}
+    <aside class="docs-recent-panel">
+      <div class="docs-recent-card">
+        <span class="docs-kicker">Latest</span>
+        <h3>最近更新</h3>
+        <ul class="docs-recent-list">
+          {% for doc in recent_docs limit: 8 %}
           <li>
-            <a href="{{ doc.url }}">{{ doc.title }}</a>
-            <span class="doc-meta">{{ doc.date | date: "%Y-%m-%d" }}</span>
+            <a href="{{ doc.url | relative_url }}">{{ doc.title }}</a>
+            <span>{{ doc.date | date: "%Y-%m-%d" }}</span>
           </li>
           {% endfor %}
         </ul>
       </div>
-    </div>
+    </aside>
   </div>
 </div>
 
-<!-- 存储所有分类数据供JavaScript使用 -->
 <script type="application/json" id="docs-data">
 {
   {% for category in docs_by_category %}
   "{{ category.name }}": [
-    {% for doc in category.items %}
+    {% assign category_docs = category.items | sort: "date" | reverse %}
+    {% for doc in category_docs %}
     {
-      "title": "{{ doc.title | escape }}",
-      "url": "{{ doc.url }}",
-      "date": "{{ doc.date | date: '%Y-%m-%d' }}"
+      "title": {{ doc.title | jsonify }},
+      "url": {{ doc.url | relative_url | jsonify }},
+      "date": {{ doc.date | date: "%Y-%m-%d" | jsonify }},
+      "category": {{ doc.category | jsonify }},
+      "tags": {{ doc.tags | jsonify }}
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ]{% unless forloop.last %},{% endunless %}
@@ -104,100 +108,42 @@ permalink: /docs.html
 </script>
 
 <script>
-  // 分类切换逻辑
-  document.addEventListener('DOMContentLoaded', function() {
-    const docsData = JSON.parse(document.getElementById('docs-data').textContent);
-    const categoryItems = document.querySelectorAll('.category-item');
-    const docList = document.getElementById('doc-list');
-    const categoryTitle = document.getElementById('current-category-title');
+document.addEventListener('DOMContentLoaded', function() {
+  var docsDataNode = document.getElementById('docs-data');
+  var docsData = docsDataNode ? JSON.parse(docsDataNode.textContent) : {};
+  var buttons = document.querySelectorAll('.docs-category-button');
+  var river = document.getElementById('docs-river');
+  var title = document.getElementById('docs-current-title');
+  var count = document.getElementById('docs-current-count');
 
-    // 移动端元素
-    const mobileCategoryCards = document.querySelectorAll('.mobile-category-card');
-    const mobileDocsSection = document.getElementById('mobile-docs-section');
-    const mobileDocList = document.getElementById('mobile-doc-list');
-    const mobileCurrentCategory = document.getElementById('mobile-current-category');
-    const mobileBackBtn = document.getElementById('mobile-back-btn');
-    const mobileRecentDocs = document.querySelector('.mobile-recent-docs');
-    const mobileCategories = document.querySelector('.mobile-categories');
-
-    // 桌面端：侧边栏点击事件
-    categoryItems.forEach(item => {
-      item.addEventListener('click', function(e) {
-        e.preventDefault();
-        const categoryName = item.dataset.category;
-
-        // 更新激活状态
-        categoryItems.forEach(ci => ci.classList.remove('active'));
-        item.classList.add('active');
-
-        // 更新标题
-        categoryTitle.textContent = categoryName;
-
-        // 更新文档列表
-        const docs = docsData[categoryName] || [];
-        let html = '';
-        docs.forEach(doc => {
-          html += `
-            <li>
-              <a href="${doc.url}">${doc.title}</a>
-              <span class="doc-meta">${doc.date}</span>
-            </li>
-          `;
-        });
-
-        docList.innerHTML = html || '<li style="color: #999;">暂无文档</li>';
-      });
+  function renderCategory(categoryName) {
+    var docs = docsData[categoryName] || [];
+    title.textContent = categoryName || '未分类';
+    count.textContent = docs.length + ' 篇内容';
+    river.innerHTML = docs.map(function(doc, index) {
+      var tags = Array.isArray(doc.tags) && doc.tags.length ? '<span>' + doc.tags.join(' / ') + '</span>' : '';
+      var number = index + 1 < 10 ? '0' + (index + 1) : String(index + 1);
+      return [
+        '<article class="docs-river-item">',
+        '  <div class="docs-river-index">' + number + '</div>',
+        '  <div class="docs-river-main">',
+        '    <h3><a href="' + doc.url + '">' + doc.title + '</a></h3>',
+        '    <div class="docs-river-meta"><span>' + doc.date + '</span>' + tags + '</div>',
+        '  </div>',
+        '  <a class="docs-open-link" href="' + doc.url + '" aria-label="阅读 ' + doc.title + '"><i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>',
+        '</article>'
+      ].join('');
+    }).join('');
+    buttons.forEach(function(button) {
+      button.classList.toggle('active', button.dataset.category === categoryName);
     });
+    if (window.lucide) lucide.createIcons();
+  }
 
-    // 移动端：分类卡片点击事件
-    mobileCategoryCards.forEach(card => {
-      card.addEventListener('click', function() {
-        const categoryName = this.dataset.category;
-
-        // 隐藏最近文档和分类列表
-        mobileRecentDocs.style.display = 'none';
-        mobileCategories.style.display = 'none';
-
-        // 显示文档列表
-        mobileDocsSection.style.display = 'block';
-        mobileCurrentCategory.textContent = categoryName;
-
-        // 更新移动端文档列表（添加from参数）
-        const docs = docsData[categoryName] || [];
-        let html = '';
-        docs.forEach(doc => {
-          html += `
-            <li>
-              <a href="${doc.url}?from=${encodeURIComponent(categoryName)}">${doc.title}</a>
-              <span class="mobile-doc-date">${doc.date}</span>
-            </li>
-          `;
-        });
-
-        mobileDocList.innerHTML = html || '<li style="color: #999;">暂无文档</li>';
-
-        // 滚动到顶部
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    });
-
-    // 移动端：返回按钮
-    if (mobileBackBtn) {
-      mobileBackBtn.addEventListener('click', function() {
-        mobileDocsSection.style.display = 'none';
-        mobileRecentDocs.style.display = 'block';
-        mobileCategories.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }
-
-    // 为分类图标添加随机颜色
-    const colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#feca57'];
-    document.querySelectorAll('.category-icon').forEach((icon, index) => {
-      const colorIndex = icon.dataset.colorIndex % colors.length;
-      icon.style.filter = `drop-shadow(0 2px 4px ${colors[colorIndex]}40)`;
-      icon.parentElement.style.setProperty('--icon-color', colors[colorIndex]);
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      renderCategory(button.dataset.category);
     });
   });
+});
 </script>
-

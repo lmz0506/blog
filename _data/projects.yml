@@ -1,15 +1,37 @@
-- name: 个人博客系统
-  description: 基于 Jekyll 的个人博客，支持知识库管理
+- name: 个人博客 & 知识库系统
+  description: |-
+    基于 Jekyll 构建的现代化个人博客和知识库系统，配备完整的可视化管理平台。
+    🎨 现代化设计 - 渐变色、毛玻璃效果、流畅动画；
+    📱 响应式布局 - 完美适配桌面端和移动端；
+    📚 知识库系统 - 支持分类、标签、目录的文档管理；
+    💭 碎碎念 - 时间轴样式的微博客功能；
+    🔗 友链管理 - 优雅的友情链接展示；
+    🎯 可视化管理 - 完整的 Web 管理后台；
+    🚀 GitHub Pages - 一键部署，免费托管。
   url: https://github.com/lmz0506/blog.git
   tags:
     - Jekyll
     - Ruby
     - Markdown
   star: true
-- name: 代码书架
-  description: 随着开发者参与的项目日益增多，本地存储着大量的代码仓库。这些项目分散在不同目录，管理和维护变得愈发困难。开发者常常面临以下困境
+- name: 代码书架 —— 本地项目管理 · AI 助手 · 开发者工具箱
+  description: |-
+    随着参与的项目越来越多，本地仓库分散在不同目录、不同托管平台（GitHub / Gitee / GitLab），常常出现：找不到项目在哪、忘了哪些还没提交或推送、在文件管理器 / 终端 / 编辑器之间反复切换。
+
+    CodeShelf 把这些都收进一个桌面应用：集中管理本地 Git 项目，直观查看自己的编码活动，并顺手内置了一批日常会用到的 AI 助手与开发工具。
   url: https://github.com/en-o/codeshelf
   tags:
     - 项目管理
     - GIT
+    - AI
+    - 简历生成
+  star: true
+- name: 家庭记忆
+  description: 一个温馨的家庭记忆记录应用，帮助家人共同记录和分享生活中的美好时刻。
+  url: https://github.com/lmz0506/family-memory
+  tags:
+    - Vue
+    - App
+    - SpringBoot
+    - JAVA
   star: true

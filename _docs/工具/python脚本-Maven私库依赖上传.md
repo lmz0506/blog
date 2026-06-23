@@ -57,7 +57,7 @@ def parse_gav_from_pom(pom_path):
             &quot;&quot;&quot;解析属性占位符&quot;&quot;&quot;
             if text and '${' in text:
                 for prop_name, prop_value in properties_dict.items():
-                    placeholder = f&quot;${{{prop_name}}}&quot;
+                    placeholder = f&quot;$&#123;&#123;&#123;prop_name&#125;&#125;&#125;&quot;
                     if placeholder in text:
                         text = text.replace(placeholder, prop_value)
             return text
@@ -68,7 +68,7 @@ def parse_gav_from_pom(pom_path):
             properties_elem = pom_root.find('m:properties', ns)
             if properties_elem is not None:
                 for prop in properties_elem:
-                    prop_name = prop.tag.replace(f&quot;{{{list(ns.values())[0]}}}&quot;, &quot;&quot;)
+                    prop_name = prop.tag.replace(f&quot;&#123;&#123;&#123;list(ns.values())[0]&#125;&#125;&#125;&quot;, &quot;&quot;)
                     properties[prop_name] = prop.text or &quot;&quot;
             return properties
 

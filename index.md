@@ -3,569 +3,363 @@ layout: default
 title: 首页
 ---
 
-<!-- 个人简介卡片 -->
-<div class="home-profile-card">
-  <div class="profile-avatar">
-    <img src="{{ site.data.profile.avatar }}" alt="{{ site.data.profile.name }}">
-  </div>
-  <div class="profile-info">
-    <h1>{{ site.data.profile.name }}</h1>
-    <p class="profile-bio">{{ site.data.profile.bio }}</p>
-    <div class="profile-intro">{{ site.data.profile.intro }}</div>
-    <div class="profile-social">
-      {% if site.data.profile.social.github %}
-      <a href="{{ site.data.profile.social.github }}" target="_blank">
-        <svg height="16" width="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-        GitHub
-      </a>
-      {% endif %}
-      {% if site.data.profile.social.gitee %}
-      <a href="{{ site.data.profile.social.gitee }}" target="_blank">
-        <svg height="16" width="16" viewBox="0 0 1024 1024"><path fill="currentColor" d="M512 1024C229.222 1024 0 794.778 0 512S229.222 0 512 0s512 229.222 512 512-229.222 512-512 512z m259.149-568.883h-290.74a25.293 25.293 0 0 0-25.292 25.293l-0.026 63.206c0 13.952 11.315 25.293 25.267 25.293h177.024c13.978 0 25.293 11.315 25.293 25.267v12.646a75.853 75.853 0 0 1-75.853 75.853h-240.23a25.293 25.293 0 0 1-25.267-25.293V417.203a75.853 75.853 0 0 1 75.827-75.853h353.946a25.293 25.293 0 0 0 25.267-25.292l0.077-63.207a25.293 25.293 0 0 0-25.268-25.293H417.152a189.62 189.62 0 0 0-189.62 189.645V771.15c0 13.977 11.316 25.293 25.294 25.293h372.94a170.65 170.65 0 0 0 170.65-170.65V480.384a25.293 25.293 0 0 0-25.293-25.267z"></path></svg>
-        Gitee
-      </a>
-      {% endif %}
-      {% if site.data.profile.social.email %}
-      <a href="mailto:{{ site.data.profile.social.email }}">
-        <svg height="16" width="16" viewBox="0 0 16 16"><path fill="currentColor" d="M1.75 2A1.75 1.75 0 000 3.75v.736a.75.75 0 000 .027v7.737C0 13.216.784 14 1.75 14h12.5A1.75 1.75 0 0016 12.25v-8.5A1.75 1.75 0 0014.25 2H1.75zM14.5 4.07v-.32a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25v.32L8 7.88l6.5-3.81zm-13 1.74v6.441c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V5.809L8.38 9.397a.75.75 0 01-.76 0L1.5 5.809z"></path></svg>
-        Email
-      </a>
-      {% endif %}
-      <a href="javascript:void(0)" id="resume-btn" class="resume-generate-btn">
-        <svg height="16" width="16" viewBox="0 0 16 16"><path fill="currentColor" d="M3.5 1A1.5 1.5 0 002 2.5v11A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5v-8L9.5 1H3.5zM3 2.5a.5.5 0 01.5-.5H9v3.5A1.5 1.5 0 0010.5 7H13v6.5a.5.5 0 01-.5.5h-9a.5.5 0 01-.5-.5v-11zM10 2.7L12.3 5h-1.8a.5.5 0 01-.5-.5V2.7zM5 9h6v1H5V9zm0 2h6v1H5v-1zm0-4h3v1H5V7z"></path></svg>
-        生成简历
-      </a>
+{% assign project_items = site.data.projects | where: "star", true %}
+{% assign selected_notes = site.docs | sort: "date" | reverse %}
+{% assign docs_by_category = site.docs | group_by: "category" %}
+{% assign current_year = 'now' | date: "%Y" %}
+
+<div class="fixed top-[-15%] left-[-15%] -z-10 w-[65%] h-[65%] rounded-full bg-emerald-400/10 dark:bg-emerald-500/5 blur-[160px] pointer-events-none animate-float-1"></div>
+<div class="fixed top-[30%] right-[-15%] -z-10 w-[60%] h-[60%] rounded-full bg-teal-400/10 dark:bg-teal-500/5 blur-[180px] pointer-events-none animate-float-2"></div>
+<div class="fixed bottom-[-10%] left-[20%] -z-10 w-[50%] h-[50%] rounded-full bg-emerald-300/5 dark:bg-emerald-500/3 blur-[150px] pointer-events-none"></div>
+
+<header class="sticky top-0 z-50 w-full glass-panel border-b border-slate-100/50 dark:border-slate-900/50 transition-all duration-300">
+  <div class="max-w-[1400px] xl:max-w-[1680px] mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-2.5 group">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-300">l</div>
+      <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent group-hover:opacity-90 transition-opacity">{{ site.title }}</span>
+    </a>
+
+    <div class="flex items-center gap-8">
+      <nav class="hidden md:flex items-center gap-10 text-sm font-medium">
+        <a href="#home" class="text-emerald-600 dark:text-emerald-400 transition-colors py-1.5 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-emerald-500 after:rounded-full">首页</a>
+        <a href="{{ '/docs.html' | relative_url }}" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors py-1.5">知识库</a>
+        <a href="{{ '/github.html' | relative_url }}" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors py-1.5">精选开源</a>
+      </nav>
+      <button id="mobileMenuBtn" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 md:hidden flex items-center justify-center text-slate-700 dark:text-slate-300">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
     </div>
   </div>
-  
-   <!-- 新增：时钟模块 -->
-  <div class="profile-clock">
-    <div class="clock" id="homeClock"></div>
-    <div class="clock-digital" id="clockDigital"></div>
-    <div class="clock-date" id="clockDate"></div>
-  </div>
+</header>
 
+<div id="mobileMenu" class="fixed inset-y-0 right-0 z-50 w-72 bg-white dark:bg-[#090d16] shadow-2xl p-6 hidden flex-col justify-between transition-transform duration-300 transform translate-x-full">
+  <div class="space-y-6">
+    <div class="flex items-center justify-between border-b pb-4 dark:border-slate-800">
+      <span class="font-bold text-slate-900 dark:text-white">菜单导航</span>
+      <button id="closeMobileMenuBtn" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <nav class="flex flex-col gap-4 text-base font-medium">
+      <a href="#home" class="text-emerald-600 dark:text-emerald-400 py-2 border-b dark:border-slate-800">首页</a>
+      <a href="{{ '/github.html' | relative_url }}" class="text-slate-600 dark:text-slate-300 py-2 border-b dark:border-slate-800">精选开源</a>
+      <a href="{{ '/docs.html' | relative_url }}" class="text-slate-600 dark:text-slate-300 py-2 border-b dark:border-slate-800">知识库</a>
+    </nav>
+  </div>
+  <div class="text-xs text-slate-400 text-center border-t pt-4 dark:border-slate-800">© {{ current_year }} {{ site.title }}</div>
 </div>
 
-<div class="home-grid">
-  <!-- 左侧：技能和当前状态 -->
-  <div class="home-sidebar">
-    <!-- 技能栈 -->
-    <div class="home-card">
-      <h3>💻 技能栈</h3>
-      {% for skill in site.data.profile.skills %}
-      <div class="skill-category">
-        <strong>{{ skill.name }}:</strong>
-        <div class="skill-tags">
-          {% for item in skill.items %}
-          <span class="skill-tag">{{ item }}</span>
+<main class="max-w-[1400px] xl:max-w-[1680px] mx-auto px-6 lg:px-12 py-12 space-y-16">
+  <section id="home" class="relative group rounded-[32px] p-6 md:p-8 lg:p-10 glass-panel glow-green overflow-hidden transition-all duration-500 hover:shadow-emerald-500/5 hover:border-emerald-500/10">
+    <div class="absolute -right-10 -top-10 w-96 h-96 rounded-full bg-emerald-400/15 dark:bg-emerald-500/10 blur-[100px] group-hover:scale-110 transition-transform duration-700 pointer-events-none"></div>
+    <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+      <div class="lg:col-span-7 space-y-5">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+          <div class="relative flex-shrink-0 group">
+            <div class="absolute -inset-1.5 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-3xl blur opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+            <div class="relative w-24 h-24 sm:w-32 sm:h-32 rounded-3xl overflow-hidden bg-slate-50 dark:bg-slate-800 flex items-center justify-center border-2 border-white dark:border-slate-700 p-2 shadow-inner">
+              <img src="{{ site.data.profile.avatar | relative_url }}" alt="{{ site.data.profile.name }}" class="w-full h-full object-cover rounded-2xl">
+            </div>
+          </div>
+          <div class="text-center sm:text-left space-y-4">
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white flex flex-col sm:flex-row items-center gap-3">
+              {{ site.data.profile.name }}
+              <span class="text-xs font-normal px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Full Stack Developer</span>
+            </h1>
+            <div class="space-y-2 text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium">
+              <p class="italic font-serif flex items-center justify-center sm:justify-start gap-1">
+                <i data-lucide="quote" class="w-3.5 h-3.5 text-emerald-500/60 rotate-180"></i>{{ site.data.profile.bio }}
+              </p>
+              <p class="flex items-center justify-center sm:justify-start gap-1.5">
+                <i data-lucide="compass" class="w-4.5 h-4.5 text-teal-500"></i>{{ site.data.profile.intro | strip }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-[1px] bg-slate-200/50 dark:bg-slate-800/50"></div>
+
+        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3.5">
+          {% if site.data.profile.social.github %}
+          <a href="{{ site.data.profile.social.github }}" target="_blank" rel="noreferrer" class="home-action-btn home-action-github">
+            <svg class="home-action-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.22-3.37-1.22-.45-1.19-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.34 1.12 2.91.85.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.96c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.95.68 1.91 0 1.38-.01 2.49-.01 2.82 0 .27.18.59.69.49A10.18 10.18 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/>
+            </svg>
+            GitHub
+          </a>
+          {% endif %}
+          {% if site.data.profile.social.gitee %}
+          <a href="{{ site.data.profile.social.gitee }}" target="_blank" rel="noreferrer" class="home-action-btn home-action-gitee"><i data-lucide="git-branch" class="w-4.5 h-4.5"></i> Gitee</a>
+          {% endif %}
+          {% if site.data.profile.social.email %}
+          <a href="mailto:{{ site.data.profile.social.email }}" class="home-action-btn home-action-email"><i data-lucide="mail" class="w-4.5 h-4.5"></i> Email</a>
+          {% endif %}
+          <button id="viewResumeBtn" class="home-action-btn home-action-resume">
+            <i data-lucide="file-text" class="w-4.5 h-4.5"></i> 查看简历
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 relative min-h-[220px] flex items-center">
+        <div class="relative flex flex-wrap gap-3 content-center">
+          {% for group in site.data.profile.skills %}
+            {% for item in group.items %}
+              {% assign skill_cat = "be" %}
+              {% assign dot_color = "bg-green-600" %}
+              {% if group.name contains "前端" %}
+                {% assign skill_cat = "fe" %}
+                {% assign dot_color = "bg-blue-500" %}
+              {% elsif group.name contains "数据库" %}
+                {% assign skill_cat = "ai" %}
+                {% assign dot_color = "bg-indigo-500" %}
+              {% elsif group.name contains "工具" %}
+                {% assign skill_cat = "tools" %}
+                {% assign dot_color = "bg-orange-500" %}
+              {% endif %}
+              {% if item contains "Lang" %}
+                {% assign skill_cat = "ai" %}
+                {% assign dot_color = "bg-teal-500 animate-pulse" %}
+              {% elsif item contains "Java" %}
+                {% assign dot_color = "bg-red-500" %}
+              {% elsif item contains "Python" %}
+                {% assign dot_color = "bg-yellow-500" %}
+              {% elsif item contains "Redis" %}
+                {% assign dot_color = "bg-red-600" %}
+              {% endif %}
+              <span data-cat="{{ skill_cat }}" class="skill-tag flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-200/40 dark:border-slate-700/40 text-sm font-medium hover:border-emerald-500 dark:hover:border-emerald-400 shadow-sm transition-all duration-300 hover:scale-105 select-none cursor-default">
+                <span class="w-2 h-2 rounded-full {{ dot_color }}"></span> {{ item }}
+              </span>
+            {% endfor %}
           {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="space-y-8">
+    <div class="flex items-center justify-between">
+      <div class="space-y-1.5">
+        <h2 class="text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-3">
+          <span>推荐项目</span>
+          <span class="text-xs font-sans font-medium px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400">{{ project_items.size }} Active</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      {% for project in project_items %}
+      <div class="project-card group relative rounded-2xl border border-slate-100/50 dark:border-slate-900/30 bg-white/65 dark:bg-[#0c111d]/50 p-6 md:p-8 transition-all duration-500 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-500/20 flex flex-col justify-between">
+        <a href="{{ project.url }}" target="_blank" rel="noreferrer" class="project-repo-link" aria-label="打开 {{ project.name }} 远程仓库">
+          <span>远程仓库</span>
+          <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+        </a>
+        <div class="space-y-5">
+          <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div class="flex items-start gap-4 sm:gap-6">
+              <span class="font-serif text-4xl text-emerald-500/20 dark:text-emerald-400/15 group-hover:text-emerald-500/40 transition-colors select-none font-bold">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+              <div class="space-y-2">
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">{{ project.name }}</h3>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10"><i data-lucide="star" class="w-3 h-3 fill-emerald-500"></i> 精选</span>
+                </div>
+                <p class="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">{{ project.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-6 pt-4 border-t border-slate-100/60 dark:border-slate-900/30">
+          <div class="flex flex-wrap gap-1.5">
+            {% for tag in project.tags %}
+            {% assign tag_mod = forloop.index0 | modulo: 5 %}
+            <span class="project-tag-palette project-tag-palette-{{ tag_mod }}">{{ tag }}</span>
+            {% endfor %}
+          </div>
         </div>
       </div>
       {% endfor %}
     </div>
+  </section>
 
-    <!-- 当前在做 -->
-    <div class="home-card">
-      <h3>🚀 当前在做</h3>
-      <ul class="currently-list">
-        {% for item in site.data.profile.currently %}
-        <li>{{ item }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-
-    <!-- GitHub 贡献图 -->
-    <div class="home-card">
-      <h3>📊 GitHub</h3>
-      <div class="github-contributions">
-        <div class="contribution-graph" id="github-chart">
-          <div class="loading-text">加载中...</div>
-        </div>
-        <div class="contribution-legend">
-          <span class="legend-label">少</span>
-          <div class="legend-colors">
-            <div class="legend-box" data-level="0"></div>
-            <div class="legend-box" data-level="1"></div>
-            <div class="legend-box" data-level="2"></div>
-            <div class="legend-box" data-level="3"></div>
-            <div class="legend-box" data-level="4"></div>
-          </div>
-          <span class="legend-label">多</span>
-        </div>
+  <section id="knowledge" class="rounded-[32px] p-8 md:p-12 glass-panel border border-slate-200/20 dark:border-slate-800/20 glow-green space-y-8">
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <div class="space-y-1.5">
+        <h2 class="text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-3"><i data-lucide="book-open" class="w-6 h-6 text-emerald-500"></i>知识库精选笔记</h2>
+        <p class="text-xs sm:text-sm text-slate-400 dark:text-slate-500">在这里，我用系统的知识图谱沉淀学习和开发过程中的点滴积累。</p>
       </div>
+      <a href="{{ '/docs.html' | relative_url }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all">进入知识库 <i data-lucide="arrow-up-right" class="w-4.5 h-4.5 text-emerald-500"></i></a>
     </div>
-  </div>
 
-  <!-- 右侧：项目和最近更新 -->
-  <div class="home-main">
-    <!-- 精选项目 -->
-    <div class="home-card">
-      <h3>⭐ 精选项目</h3>
-      <div class="projects-grid">
-        {% for project in site.data.projects %}
-        {% if project.star %}
-        <div class="project-card">
-          <div class="project-header">
-            <h4><a href="{{ project.url }}" target="_blank">{{ project.name }}</a></h4>
-          </div>
-          <p class="project-desc">{{ project.description }}</p>
-          {% if project.links %}
-          <div class="project-links">
-            {% for link in project.links %}
-            <a href="{{ link.url }}" target="_blank" class="project-link">{{ link.name }}</a>
-            {% endfor %}
-          </div>
-          {% endif %}
-          <div class="project-tags">
-            {% for tag in project.tags %}
-            <span class="project-tag">{{ tag }}</span>
-            {% endfor %}
-          </div>
-        </div>
-        {% endif %}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-4 flex flex-col gap-3">
+        {% for category in docs_by_category %}
+        {% assign category_mod = forloop.index0 | modulo: 3 %}
+        <button type="button" data-category-index="{{ forloop.index0 }}" class="knowledge-category-btn {% if forloop.first %}is-active{% endif %}">
+          <span class="knowledge-category-icon doc-category-pill-{{ category_mod }}"><i data-lucide="{% if category.name contains 'ClickHouse' %}database{% elsif category.name contains 'AI' %}brain{% elsif category.name contains 'Nginx' %}network{% else %}folder-open{% endif %}" class="w-5 h-5"></i></span>
+          <span class="knowledge-category-copy">
+            <strong>{{ category.name | default: "未分类" }}</strong>
+            <small>{{ category.items | size }} 篇文章</small>
+          </span>
+        </button>
         {% endfor %}
       </div>
-      <a href="#all-projects" class="view-all-link" onclick="document.getElementById('all-projects').scrollIntoView({behavior: 'smooth'}); return false;">查看所有项目 →</a>
-    </div>
 
-    <!-- 最近更新 -->
-    <div class="home-card">
-      <h3>📝 最近更新</h3>
-      <ul class="recent-docs">
-        {% assign sorted_docs = site.docs | sort: 'date' | reverse %}
-        {% for doc in sorted_docs limit:3 %}
-        <li>
-          <a href="{{ doc.url }}">{{ doc.title }}</a>
-          <span class="doc-date">{{ doc.date | date: "%Y-%m-%d" }}</span>
-        </li>
-        {% endfor %}
-      </ul>
-      <a href="/docs.html" class="view-all-link">查看知识库 →</a>
-    </div>
+      <div class="lg:col-span-8 knowledge-article-shell bg-slate-500/5 dark:bg-[#0c111d]/40 rounded-2xl p-5 sm:p-6 border border-slate-200/25 dark:border-slate-800/25">
+        {% for category in docs_by_category %}
+        <div data-category-panel="{{ forloop.index0 }}" class="knowledge-article-panel {% unless forloop.first %}hidden{% endunless %}">
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Category</span>
+              <h3 class="mt-1 text-xl font-extrabold text-slate-900 dark:text-white">{{ category.name | default: "未分类" }}</h3>
+            </div>
+            <a href="{{ '/docs.html' | relative_url }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400">全部文章 <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+          </div>
 
-    <!-- 所有项目 -->
-    <div class="home-card" id="all-projects">
-      <h3>📦 所有项目</h3>
-      <div class="projects-list">
-        {% for project in site.data.projects %}
-        <div class="project-item">
-          <div class="project-item-header">
-            <h4><a href="{{ project.url }}" target="_blank">{{ project.name }}</a></h4>
-            {% if project.star %}<span class="star-badge">⭐</span>{% endif %}
-          </div>
-          <p class="project-item-desc">{{ project.description }}</p>
-          {% if project.links %}
-          <div class="project-links">
-            {% for link in project.links %}
-            <a href="{{ link.url }}" target="_blank" class="project-link">{{ link.name }}</a>
-            {% endfor %}
-          </div>
-          {% endif %}
-          <div class="project-tags">
-            {% for tag in project.tags %}
-            <span class="project-tag">{{ tag }}</span>
+          <div class="knowledge-article-list">
+            {% assign category_docs = category.items | sort: "date" | reverse %}
+            {% for doc in category_docs limit: 8 %}
+            <a href="{{ doc.url | relative_url }}" class="knowledge-article-card">
+              <span class="knowledge-article-index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+              <span class="knowledge-article-main">
+                <strong>{{ doc.title }}</strong>
+                <small>{{ doc.excerpt | strip_html | strip_newlines | truncate: 96 }}</small>
+              </span>
+              <span class="knowledge-article-arrow"><i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>
+            </a>
             {% endfor %}
           </div>
         </div>
         {% endfor %}
       </div>
     </div>
-  </div>
-</div>
+  </section>
+</main>
 
-<!-- 简历弹窗 -->
-<div class="resume-overlay" id="resume-overlay">
-  <div class="resume-container">
-    <div class="resume-actions">
-      <div class="resume-actions-left">
-        <button id="resume-edit-btn" class="resume-btn-edit">✏️ 编辑</button>
-        <button id="resume-save-btn" class="resume-btn-save" style="display:none;">💾 保存</button>
-        <button id="resume-reset-btn" class="resume-btn-reset" style="display:none;">🔄 重置</button>
-        <span id="resume-cache-hint" class="resume-cache-hint" style="display:none;">📦 已加载缓存</span>
+<div id="resumeModal" class="fixed inset-0 z-[100] bg-slate-950/40 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+  <div class="w-full max-w-2xl bg-white dark:bg-[#0f172a] rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col max-h-[90vh]">
+    <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/30">
+      <div class="flex items-center gap-3">
+        <div class="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+        <div>
+          <h3 class="font-bold text-slate-900 dark:text-white text-lg">{{ site.data.profile.name }}的简历档案</h3>
+          <p class="text-xs text-slate-400">Full-Stack / AI Developer / Architect</p>
+        </div>
       </div>
-      <div class="resume-actions-right">
-        <button id="resume-download-btn" class="resume-btn-download">📥 下载 PDF</button>
-        <button id="resume-print-btn" class="resume-btn-print" title="打印时请在浏览器设置中关闭页眉页脚">🖨️ 打印</button>
-        <button id="resume-close-btn" class="resume-btn-close">关闭</button>
-      </div>
+      <button id="closeResumeBtn" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-all"><i data-lucide="x" class="w-5 h-5"></i></button>
     </div>
-    <div class="resume-body" id="resume-body">
-      <h1 class="resume-name" data-editable="true">{{ site.data.profile.name }}</h1>
-      <div class="resume-contact">
-        <div class="resume-contact-row">
-          {% if site.data.profile.social.email %}<span class="resume-contact-item"><i>📧</i><label>Email</label><span data-editable="true">{{ site.data.profile.social.email }}</span></span>{% endif %}
-          <span class="resume-contact-item"><i>💼</i><label>工作年限</label><span id="work-years"></span>年</span>
+    <div class="p-6 overflow-y-auto space-y-6 text-sm">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80">
+          <span class="text-xs text-slate-400 block mb-1">专业经历</span>
+          <span class="font-bold text-slate-800 dark:text-white"><span id="workYears"></span>+ 年全栈开发经验</span>
         </div>
-        <div class="resume-contact-row">
-          {% if site.data.profile.social.github %}<span class="resume-contact-item"><i>🔗</i><label>GitHub</label><span data-editable="true">{{ site.data.profile.social.github }}</span></span>{% endif %}
-          {% if site.data.profile.social.gitee %}<span class="resume-contact-item"><i>🔗</i><label>Gitee</label><span data-editable="true">{{ site.data.profile.social.gitee }}</span></span>{% endif %}
-        </div>
-      </div>
-
-      <div class="resume-bio" data-editable="true">{{ site.data.profile.intro }}</div>
-
-      <div class="resume-section" data-section="objective">
-        <div class="resume-section-header">
-          <h2>求职意向</h2>
-          <button class="resume-section-delete" title="删除此板块">✕</button>
-        </div>
-        <div class="resume-section-content" data-editable="true">
-        {% if site.data.resume.objective and site.data.resume.objective != "" %}
-        <p class="resume-objective">{{ site.data.resume.objective }}</p>
-        {% endif %}
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80">
+          <span class="text-xs text-slate-400 block mb-1">偏好领域</span>
+          <span class="font-bold text-slate-800 dark:text-white">AI Agent、微服务架构</span>
         </div>
       </div>
-
-      <div class="resume-section" data-section="skills">
-        <div class="resume-section-header">
-          <h2>技能栈</h2>
-          <button class="resume-section-delete" title="删除此板块">✕</button>
-        </div>
-        <div class="resume-section-content" data-editable="true">
-        {% for skill in site.data.profile.skills %}
-        <div class="resume-skill-row">
-          <strong>{{ skill.name }}：</strong>
-          <span>{{ skill.items | join: "、" }}</span>
-        </div>
-        {% endfor %}
-        </div>
-      </div>
-
-      <div class="resume-section" data-section="work">
-        <div class="resume-section-header">
-          <h2>工作经历</h2>
-          <button class="resume-section-delete" title="删除此板块">✕</button>
-        </div>
-        <div class="resume-section-content" data-editable="true">
-        {% for job in site.data.resume.work_experience %}
-        <div class="resume-job">
-          <div class="resume-job-header">
-            <strong>{{ job.company }}</strong>
-            <span class="resume-job-period">{{ job.period }}</span>
+      <div class="space-y-4">
+        <h4 class="font-bold text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400">实践成长历程</h4>
+        <div class="relative border-l border-emerald-500/30 ml-2.5 pl-5 space-y-6">
+          {% for work in site.data.resume.work_experience limit: 2 %}
+          <div class="relative">
+            <span class="absolute -left-[25px] top-1.5 w-2.5 h-2.5 rounded-full {% if forloop.first %}bg-emerald-500 ring-4 ring-emerald-500/20{% else %}bg-slate-300 dark:bg-slate-600{% endif %}"></span>
+            <span class="text-xs font-semibold {% if forloop.first %}text-emerald-600 dark:text-emerald-400{% else %}text-slate-400{% endif %}">{{ work.period }}</span>
+            <h5 class="font-bold text-slate-800 dark:text-white text-sm mt-0.5">{{ work.position }}</h5>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{{ work.description }}</p>
           </div>
-          <div class="resume-job-position">{{ job.position }}</div>
-          {% if job.description and job.description != "" %}
-          <p>{{ job.description }}</p>
-          {% endif %}
-          {% if job.highlights.size > 0 %}
-          <ul>
-            {% for item in job.highlights %}
-            <li>{{ item }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </div>
-        {% endfor %}
-        </div>
-      </div>
-
-      <div class="resume-section" data-section="projects">
-        <div class="resume-section-header">
-          <h2>项目经历</h2>
-          <button class="resume-section-delete" title="删除此板块">✕</button>
-        </div>
-        <div class="resume-section-content">
-        <h3 class="resume-sub-title" data-editable="true">公司项目</h3>
-        <div data-editable="true">
-        {% for project in site.data.resume.company_projects %}
-        <div class="resume-project">
-          <div class="resume-project-header">
-            <strong>{{ project.name }}</strong>
-            <span class="resume-project-tags">{{ project.period }}</span>
-          </div>
-          <div class="resume-project-meta">
-            {% if project.company %}<span>{{ project.company }}</span>{% endif %}
-            {% if project.role %}<span>{{ project.role }}</span>{% endif %}
-          </div>
-          <p>{{ project.description }}</p>
-          {% if project.highlights.size > 0 %}
-          <ul>
-            {% for item in project.highlights %}
-            <li>{{ item }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          {% if project.tags.size > 0 %}
-          <div class="resume-project-tag-list">{{ project.tags | join: " / " }}</div>
-          {% endif %}
-        </div>
-        {% endfor %}
-        </div>
-
-        <h3 class="resume-sub-title" data-editable="true">个人项目</h3>
-        <div data-editable="true">
-        {% assign starred_projects = site.data.projects | where: "star", true %}
-        {% assign normal_projects = site.data.projects | where: "star", false %}
-        {% for project in starred_projects %}
-        <div class="resume-project">
-          <div class="resume-project-header">
-            <strong>{{ project.name }} ⭐</strong>
-            <span class="resume-project-tags">{{ project.tags | join: " / " }}</span>
-          </div>
-          <p>{{ project.description }}</p>
-          {% if project.url or project.links %}
-          <div class="resume-project-links">
-            {% if project.url %}<a href="{{ project.url }}" target="_blank">🔗 {{ project.url }}</a>{% endif %}
-            {% for link in project.links %}
-            <a href="{{ link.url }}" target="_blank">{{ link.name }}</a>
-            {% endfor %}
-          </div>
-          {% endif %}
-        </div>
-        {% endfor %}
-        {% for project in normal_projects %}
-        <div class="resume-project">
-          <div class="resume-project-header">
-            <strong>{{ project.name }}</strong>
-            <span class="resume-project-tags">{{ project.tags | join: " / " }}</span>
-          </div>
-          <p>{{ project.description }}</p>
-          {% if project.url or project.links %}
-          <div class="resume-project-links">
-            {% if project.url %}<a href="{{ project.url }}" target="_blank">🔗 {{ project.url }}</a>{% endif %}
-            {% for link in project.links %}
-            <a href="{{ link.url }}" target="_blank">{{ link.name }}</a>
-            {% endfor %}
-          </div>
-          {% endif %}
-        </div>
-        {% endfor %}
-        </div>
-        </div>
-      </div>
-
-      <div class="resume-section" data-section="education">
-        <div class="resume-section-header">
-          <h2>教育经历</h2>
-          <button class="resume-section-delete" title="删除此板块">✕</button>
-        </div>
-        <div class="resume-section-content" data-editable="true">
-        {% for edu in site.data.resume.education %}
-        <div class="resume-edu">
-          <div class="resume-edu-header">
-            <strong>{{ edu.school }}</strong>
-            <span class="resume-edu-period">{{ edu.period }}</span>
-          </div>
-          <div class="resume-edu-detail">{{ edu.major }} · {{ edu.degree }}</div>
-        </div>
-        {% endfor %}
-        </div>
-      </div>
-
-      <div class="resume-section" data-section="certifications">
-        <div class="resume-section-header">
-          <h2>证书/认证</h2>
-          <button class="resume-section-delete" title="删除此板块">✕</button>
-        </div>
-        <div class="resume-section-content" data-editable="true">
-        {% if site.data.resume.certifications.size > 0 %}
-        <ul>
-          {% for cert in site.data.resume.certifications %}
-          <li>{{ cert }}</li>
           {% endfor %}
-        </ul>
-        {% endif %}
         </div>
       </div>
-
-      <div class="resume-section" data-section="evaluation">
-        <div class="resume-section-header">
-          <h2>自我评价</h2>
-          <button class="resume-section-delete" title="删除此板块">✕</button>
-        </div>
-        <div class="resume-section-content" data-editable="true">
-        {% if site.data.resume.self_evaluation and site.data.resume.self_evaluation != "" %}
-        <p class="resume-evaluation">{{ site.data.resume.self_evaluation }}</p>
-        {% endif %}
-        </div>
-      </div>
+    </div>
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30 flex justify-end gap-2">
+      <button onclick="copyEmailToClipboard()" class="px-4 py-2 text-xs font-bold rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5"><i data-lucide="copy" class="w-4 h-4"></i> 复制联系邮箱</button>
+      <button id="closeResumeBtnSecondary" class="px-5 py-2 text-xs font-bold rounded-xl bg-slate-950 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-all">我知道了</button>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<div id="toastMessage" class="fixed bottom-6 right-6 z-[110] px-4 py-3 rounded-2xl bg-slate-900 text-white dark:bg-emerald-600 dark:text-white shadow-xl shadow-slate-950/10 border border-white/10 hidden items-center gap-2.5 transition-all text-sm transform translate-y-2 opacity-0">
+  <i data-lucide="info" class="w-4 h-4 text-emerald-400 dark:text-white"></i>
+  <span id="toastText">通知内容</span>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var overlay = document.getElementById('resume-overlay');
-  var openBtn = document.getElementById('resume-btn');
-  var closeBtn = document.getElementById('resume-close-btn');
-  var printBtn = document.getElementById('resume-print-btn');
-  var downloadBtn = document.getElementById('resume-download-btn');
-  var resumeBody = document.getElementById('resume-body');
-  var editBtn = document.getElementById('resume-edit-btn');
-  var saveBtn = document.getElementById('resume-save-btn');
-  var resetBtn = document.getElementById('resume-reset-btn');
-  var cacheHint = document.getElementById('resume-cache-hint');
+  lucide.createIcons();
 
-  var CACHE_KEY = 'resume_cache';
-  var CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7天过期
-  var isEditMode = false;
-  var originalHTML = resumeBody.innerHTML;
-
-  // 计算工作年限
-  var startYear = {{ site.data.resume.start_year | default: 2018 }};
-  var now = new Date();
-  var workYears = now.getFullYear() - startYear;
-  document.getElementById('work-years').textContent = workYears;
-
-  // 加载缓存
-  function loadCache() {
-    try {
-      var cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        var data = JSON.parse(cached);
-        if (Date.now() - data.timestamp < CACHE_EXPIRY) {
-          resumeBody.innerHTML = data.html;
-          cacheHint.style.display = 'inline';
-          // 重新计算工作年限（因为替换了 HTML）
-          var workYearsEl = document.getElementById('work-years');
-          if (workYearsEl) workYearsEl.textContent = workYears;
-          return true;
-        } else {
-          localStorage.removeItem(CACHE_KEY);
-        }
-      }
-    } catch(e) {}
-    return false;
-  }
-
-  // 保存缓存
-  function saveCache() {
-    try {
-      var data = {
-        html: resumeBody.innerHTML,
-        timestamp: Date.now()
-      };
-      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-    } catch(e) {}
-  }
-
-  // 进入编辑模式
-  function enterEditMode() {
-    isEditMode = true;
-    resumeBody.classList.add('resume-editing');
-    editBtn.style.display = 'none';
-    saveBtn.style.display = 'inline-flex';
-    resetBtn.style.display = 'inline-flex';
-
-    // 启用 contenteditable
-    var editables = resumeBody.querySelectorAll('[data-editable="true"]');
-    editables.forEach(function(el) {
-      el.setAttribute('contenteditable', 'true');
-    });
-
-    // 显示删除按钮
-    var deleteButtons = resumeBody.querySelectorAll('.resume-section-delete');
-    deleteButtons.forEach(function(btn) {
-      btn.style.display = 'inline-flex';
-    });
-  }
-
-  // 退出编辑模式
-  function exitEditMode() {
-    isEditMode = false;
-    resumeBody.classList.remove('resume-editing');
-    editBtn.style.display = 'inline-flex';
-    saveBtn.style.display = 'none';
-    resetBtn.style.display = 'none';
-
-    // 禁用 contenteditable
-    var editables = resumeBody.querySelectorAll('[data-editable="true"]');
-    editables.forEach(function(el) {
-      el.removeAttribute('contenteditable');
-    });
-
-    // 隐藏删除按钮
-    var deleteButtons = resumeBody.querySelectorAll('.resume-section-delete');
-    deleteButtons.forEach(function(btn) {
-      btn.style.display = 'none';
-    });
-  }
-
-  // 删除板块
-  function handleSectionDelete(e) {
-    if (!isEditMode) return;
-    var section = e.target.closest('.resume-section');
-    if (section && confirm('确定删除此板块？')) {
-      section.remove();
-    }
-  }
-
-  // 事件绑定
-  resumeBody.addEventListener('click', function(e) {
-    if (e.target.classList.contains('resume-section-delete')) {
-      handleSectionDelete(e);
-    }
-  });
-
-  editBtn.addEventListener('click', enterEditMode);
-
-  saveBtn.addEventListener('click', function() {
-    saveCache();
-    exitEditMode();
-    cacheHint.style.display = 'inline';
-    alert('已保存到本地缓存！');
-  });
-
-  resetBtn.addEventListener('click', function() {
-    if (confirm('确定重置？将恢复原始数据并清除缓存。')) {
-      localStorage.removeItem(CACHE_KEY);
-      resumeBody.innerHTML = originalHTML;
-      // 重新计算工作年限
-      var workYearsEl = document.getElementById('work-years');
-      if (workYearsEl) workYearsEl.textContent = workYears;
-      exitEditMode();
-      cacheHint.style.display = 'none';
-    }
-  });
-
-  openBtn.addEventListener('click', function() {
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  });
-
-  closeBtn.addEventListener('click', function() {
-    if (isEditMode) exitEditMode();
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-  });
-
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) {
-      if (isEditMode) exitEditMode();
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  });
-
-  // 打印按钮
-  printBtn.addEventListener('click', function() {
-    if (isEditMode) exitEditMode();
-    alert('提示：打印时请在浏览器打印设置中取消勾选「页眉和页脚」以获得更好效果。\n\n或直接使用「下载 PDF」按钮。');
-    window.print();
-  });
-
-  // 下载 PDF 按钮
-  downloadBtn.addEventListener('click', function() {
-    if (isEditMode) exitEditMode();
-    // 临时隐藏删除按钮
-    var deleteButtons = resumeBody.querySelectorAll('.resume-section-delete');
-    deleteButtons.forEach(function(btn) { btn.style.visibility = 'hidden'; });
-
-    var opt = {
-      margin: [10, 10, 10, 10],
-      filename: '{{ site.data.profile.name }}-简历.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(resumeBody).save().then(function() {
-      deleteButtons.forEach(function(btn) { btn.style.visibility = ''; });
+  document.querySelectorAll('.knowledge-category-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const index = btn.getAttribute('data-category-index');
+      document.querySelectorAll('.knowledge-category-btn').forEach(item => item.classList.toggle('is-active', item === btn));
+      document.querySelectorAll('[data-category-panel]').forEach(panel => {
+        panel.classList.toggle('hidden', panel.getAttribute('data-category-panel') !== index);
+      });
+      lucide.createIcons();
     });
   });
 
-  // 页面加载时尝试加载缓存
-  loadCache();
-});
+  const resumeModal = document.getElementById('resumeModal');
+  const viewResumeBtn = document.getElementById('viewResumeBtn');
+  const closeResumeBtn = document.getElementById('closeResumeBtn');
+  const closeResumeBtnSecondary = document.getElementById('closeResumeBtnSecondary');
+  const workYears = new Date().getFullYear() - {{ site.data.resume.start_year | default: 2018 }};
+  document.getElementById('workYears').textContent = workYears;
+
+  function openModal() {
+    resumeModal.classList.remove('hidden');
+    resumeModal.style.animation = 'fadeIn 0.3s ease forwards';
+  }
+  function closeModal() {
+    resumeModal.classList.add('hidden');
+  }
+  viewResumeBtn.addEventListener('click', openModal);
+  closeResumeBtn.addEventListener('click', closeModal);
+  closeResumeBtnSecondary.addEventListener('click', closeModal);
+  resumeModal.addEventListener('click', e => { if (e.target === resumeModal) closeModal(); });
+
+  function copyEmailToClipboard() {
+    const text = {{ site.data.profile.social.email | jsonify }};
+    const input = document.createElement('input');
+    input.setAttribute('value', text);
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+    showToast('联系邮箱已复制到剪贴板，欢迎来信！');
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('toastMessage');
+    const toastText = document.getElementById('toastText');
+    toastText.textContent = message;
+    toast.classList.remove('hidden');
+    toast.classList.add('flex');
+    setTimeout(() => {
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+    }, 50);
+    setTimeout(() => {
+      toast.style.transform = 'translateY(8px)';
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 300);
+    }, 3000);
+  }
+
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const closeMobileMenuBtn = document.getElementById('closeMobileMenuBtn');
+  mobileMenuBtn.addEventListener('click', () => {
+    mobileMenu.classList.remove('hidden');
+    mobileMenu.classList.add('flex');
+    setTimeout(() => mobileMenu.classList.remove('translate-x-full'), 50);
+  });
+  function closeMobileMenu() {
+    mobileMenu.classList.add('translate-x-full');
+    setTimeout(() => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('flex');
+    }, 300);
+  }
+  closeMobileMenuBtn.addEventListener('click', closeMobileMenu);
+  document.querySelectorAll('#mobileMenu nav a').forEach(link => link.addEventListener('click', closeMobileMenu));
 </script>

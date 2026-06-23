@@ -1,8 +1,11 @@
 name: 李明洲
-bio: 不曾养性与修真，混沌迷心熬日月
+bio: 在代码与逻辑的混沌中，寻找属于我的那缕烟火。
 avatar: /assets/images/avatar.jpg
-intro: |
-  日日如梭，认真对待
+intro: |-
+  不求大彻大悟，但求落笔有痕。
+  这里记录着琐碎的日常、偶尔的迷茫，以及那些在平凡岁月里闪闪发光的瞬间。
+  煮字疗饥，烹茶慰心。
+  且将这半生混沌，熬作一锅温热的人间烟火，与路过的你，慢慢分享。
 skills:
   - name: 前端
     items:
@@ -21,6 +24,7 @@ skills:
       - MySQL
       - PostgreSQL
       - Redis
+      - ES
   - name: 工具
     items:
       - Git

@@ -11,7 +11,7 @@ body {
   color: var(--color-text-dark);
   background: var(--gradient-bg);
   min-height: 100vh;
-  padding-top: 70px;
+  padding-top: 0;
 }
 
 .container {
@@ -24,7 +24,7 @@ body {
 /* 平板设备优化 */
 @media (max-width: 768px) {
   body {
-    padding-top: 60px;
+    padding-top: 0;
   }
 
   .container {
