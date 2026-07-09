@@ -180,8 +180,109 @@ layout: default
     const mobileTocToggle = document.querySelector('.mobile-toc-toggle');
     const mobileTocBtn = document.getElementById('mobileTocBtn');
     const mobileTocContent = document.getElementById('mobileTocContent');
+    let mermaidLoaderPromise = null;
+    let mermaidSequence = 0;
 
     if (!content || !tocNav) return;
+
+    function getMermaidCodeBlocks() {
+      return Array.from(
+        content.querySelectorAll('pre > code.language-mermaid, code.language-mermaid')
+      );
+    }
+
+    function resolveMermaidHost(codeBlock) {
+      let host = codeBlock.closest('pre') || codeBlock;
+
+      if (host.parentElement && host.parentElement.classList.contains('highlight')) {
+        host = host.parentElement;
+      }
+
+      if (host.parentElement && host.parentElement.classList.contains('highlighter-rouge')) {
+        host = host.parentElement;
+      }
+
+      return host;
+    }
+
+    function ensureMermaidLoaded() {
+      if (window.mermaid) {
+        return Promise.resolve(window.mermaid);
+      }
+
+      if (mermaidLoaderPromise) {
+        return mermaidLoaderPromise;
+      }
+
+      mermaidLoaderPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = "{{ '/assets/vendor/mermaid/mermaid.min.js' | relative_url }}";
+        script.onload = () => resolve(window.mermaid);
+        script.onerror = () => reject(new Error('Failed to load Mermaid'));
+        document.head.appendChild(script);
+      });
+
+      return mermaidLoaderPromise;
+    }
+
+    async function renderMermaidDiagrams() {
+      const mermaidBlocks = getMermaidCodeBlocks();
+      if (!mermaidBlocks.length) return;
+
+      let mermaidApi;
+      try {
+        mermaidApi = await ensureMermaidLoaded();
+      } catch (error) {
+        console.error(error);
+        return;
+      }
+
+      mermaidApi.initialize({
+        startOnLoad: false,
+        securityLevel: 'loose',
+        theme: 'base',
+        fontFamily: '"Inter", "PingFang SC", "Microsoft YaHei", sans-serif',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        themeVariables: {
+          primaryColor: '#d1fae5',
+          primaryTextColor: '#0f172a',
+          primaryBorderColor: '#10b981',
+          lineColor: '#159565',
+          secondaryColor: '#ecfdf5',
+          tertiaryColor: '#f8fafc',
+          clusterBkg: '#f0fdf4',
+          clusterBorder: '#6ee7b7',
+          fontSize: '15px'
+        }
+      });
+
+      for (const codeBlock of mermaidBlocks) {
+        const source = codeBlock.textContent.replace(/\u00a0/g, ' ').trim();
+        if (!source) continue;
+
+        const host = resolveMermaidHost(codeBlock);
+        const renderId = `mermaid-diagram-${mermaidSequence++}`;
+
+        try {
+          const { svg, bindFunctions } = await mermaidApi.render(renderId, source);
+          const wrapper = document.createElement('figure');
+          wrapper.className = 'mermaid-render';
+          wrapper.dataset.mermaidSource = source;
+          wrapper.innerHTML = `<div class="mermaid-canvas">${svg}</div>`;
+          host.replaceWith(wrapper);
+
+          if (typeof bindFunctions === 'function') {
+            bindFunctions(wrapper);
+          }
+        } catch (error) {
+          console.error('Mermaid render failed:', error);
+        }
+      }
+    }
 
     // 获取所有标题
     const headings = content.querySelectorAll('h2, h3');
@@ -529,6 +630,14 @@ layout: default
             case 'br':
               markdown += '  \n';
               break;
+            case 'figure':
+              if (node.classList.contains('mermaid-render')) {
+                const mermaidSource = node.dataset.mermaidSource || node.textContent.trim();
+                markdown += '```mermaid\n' + mermaidSource + '\n```\n\n';
+                break;
+              }
+              markdown += htmlToMarkdown(node);
+              break;
             case 'div':
             case 'span':
               // 容器元素，递归处理子元素
@@ -666,5 +775,7 @@ date: {{ page.date | date: "%Y-%m-%d" }}
         }
       });
     }
+
+    renderMermaidDiagrams();
   });
 </script>

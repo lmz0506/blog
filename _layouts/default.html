@@ -21,30 +21,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   {% if is_home %}
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              900: '#064e3b'
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
-            serif: ['Playfair Display', 'Noto Serif SC', 'Georgia', 'serif']
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="{{ '/assets/css/tailwind.generated.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <link rel="stylesheet" href="{{ '/assets/css/index.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   {% endif %}
   {% if page.url == '/links.html' %}
@@ -77,12 +54,144 @@
   </main>
   {% endif %}
 
+  <div class="page-scroll-indicator" id="pageScrollIndicator" aria-hidden="true">
+    <div class="page-scroll-thumb" id="pageScrollThumb"></div>
+  </div>
+
   {% include footer.html %}
   <script src="{{ '/assets/js/clock.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <script>
     if (window.lucide) {
       lucide.createIcons();
     }
+
+    (function() {
+      var indicator = document.getElementById('pageScrollIndicator');
+      var thumb = document.getElementById('pageScrollThumb');
+      if (!indicator || !thumb) return;
+      var metrics = {
+        trackHeight: 0,
+        thumbHeight: 50,
+        maxScroll: 0,
+        available: 0
+      };
+      var dragState = {
+        active: false,
+        pointerId: null,
+        startY: 0,
+        startScroll: 0
+      };
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function measurePageScroll() {
+        var doc = document.documentElement;
+        var scrollTop = window.scrollY || doc.scrollTop || 0;
+        var viewportHeight = window.innerHeight || doc.clientHeight || 0;
+        var scrollHeight = Math.max(doc.scrollHeight, document.body.scrollHeight);
+        var maxScroll = Math.max(scrollHeight - viewportHeight, 0);
+        var trackHeight = indicator.clientHeight;
+        var minThumbHeight = 50;
+        var thumbHeight = maxScroll <= 0 ? trackHeight : Math.max((viewportHeight / scrollHeight) * trackHeight, minThumbHeight);
+        var available = Math.max(trackHeight - thumbHeight, 0);
+
+        metrics.trackHeight = trackHeight;
+        metrics.thumbHeight = thumbHeight;
+        metrics.maxScroll = maxScroll;
+        metrics.available = available;
+
+        return {
+          doc: doc,
+          scrollTop: scrollTop,
+          viewportHeight: viewportHeight,
+          scrollHeight: scrollHeight,
+          maxScroll: maxScroll,
+          trackHeight: trackHeight,
+          thumbHeight: thumbHeight,
+          available: available
+        };
+      }
+
+      function updatePageScrollIndicator() {
+        var state = measurePageScroll();
+
+        if (state.maxScroll <= 0 || state.viewportHeight <= 0) {
+          indicator.classList.add('is-hidden');
+          return;
+        }
+
+        indicator.classList.remove('is-hidden');
+        var thumbTop = state.available === 0 ? 0 : (state.scrollTop / state.maxScroll) * state.available;
+
+        thumb.style.height = state.thumbHeight + 'px';
+        thumb.style.transform = 'translateY(' + thumbTop + 'px)';
+      }
+
+      function scrollPageFromThumbOffset(offsetY) {
+        var state = measurePageScroll();
+        if (state.maxScroll <= 0) return;
+
+        var ratio = state.available <= 0 ? 0 : clamp(offsetY / state.available, 0, 1);
+        window.scrollTo({
+          top: ratio * state.maxScroll,
+          behavior: 'auto'
+        });
+      }
+
+      function stopIndicatorDrag() {
+        if (!dragState.active) return;
+        dragState.active = false;
+        dragState.pointerId = null;
+        indicator.classList.remove('is-dragging');
+      }
+
+      thumb.addEventListener('pointerdown', function(event) {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+        measurePageScroll();
+        dragState.active = true;
+        dragState.pointerId = event.pointerId;
+        dragState.startY = event.clientY;
+        dragState.startScroll = window.scrollY || document.documentElement.scrollTop || 0;
+        indicator.classList.add('is-dragging');
+        if (thumb.setPointerCapture) {
+          thumb.setPointerCapture(event.pointerId);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+      });
+
+      indicator.addEventListener('pointerdown', function(event) {
+        if (event.target === thumb) return;
+        var rect = indicator.getBoundingClientRect();
+        var offset = event.clientY - rect.top - metrics.thumbHeight / 2;
+        scrollPageFromThumbOffset(offset);
+        event.preventDefault();
+      });
+
+      window.addEventListener('pointermove', function(event) {
+        if (!dragState.active) return;
+        if (dragState.pointerId !== null && event.pointerId !== dragState.pointerId) return;
+
+        measurePageScroll();
+        var deltaY = event.clientY - dragState.startY;
+        var scrollDelta = metrics.available <= 0 ? 0 : (deltaY / metrics.available) * metrics.maxScroll;
+
+        window.scrollTo({
+          top: clamp(dragState.startScroll + scrollDelta, 0, metrics.maxScroll),
+          behavior: 'auto'
+        });
+      });
+
+      window.addEventListener('pointerup', stopIndicatorDrag);
+      window.addEventListener('pointercancel', stopIndicatorDrag);
+
+      window.addEventListener('scroll', updatePageScrollIndicator, { passive: true });
+      window.addEventListener('resize', updatePageScrollIndicator);
+      updatePageScrollIndicator();
+    })();
   </script>
 </body>
 </html>

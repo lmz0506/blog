@@ -38,6 +38,10 @@
 <script>
 var _hmt = _hmt || [];
 (function() {
+  var productionHost = '{{ production_host }}';
+  var currentHost = window.location.hostname;
+  var isLocalHost = /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/i.test(currentHost);
+  if (isLocalHost || !productionHost || currentHost !== productionHost) return;
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?{{ site.baidu_analytics }}";
   var s = document.getElementsByTagName("script")[0];

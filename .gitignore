@@ -1,6 +1,7 @@
 /_site
 /dist
 /dist.tar.gz
+/node_modules/
 /.jekyll-cache
 /.bundle
 /.idea/
