@@ -1424,6 +1424,18 @@
   border: 1px solid var(--color-primary-15);
 }
 
+/* Heading gradients use a transparent text fill. Reset it for inline code so
+   identifiers wrapped in backticks remain visible inside headings. */
+.doc-content h1 code,
+.doc-content h2 code,
+.doc-content h3 code,
+.doc-content h4 code,
+.doc-content h5 code,
+.doc-content h6 code {
+  color: #047857;
+  -webkit-text-fill-color: #047857;
+}
+
 .doc-content pre {
   background: var(--color-light-80);
   backdrop-filter: var(--blur-md);

@@ -18,7 +18,7 @@
 
 ## 📸 预览
 
-访问地址: [http://doc.lmzfly.xyz/](http://doc.lmzfly.xyz/)
+访问地址: https://doc.limverse.com/](https://doc.limverse.com/)
 
 ## 🚀 快速开始
 

@@ -5,7 +5,6 @@ title: 首页
 
 {% assign project_items = site.data.projects | where: "star", true %}
 {% assign selected_notes = site.docs | sort: "date" | reverse %}
-{% assign docs_by_category = site.docs | group_by: "category" %}
 {% assign current_year = 'now' | date: "%Y" %}
 
 <div class="fixed top-[-15%] left-[-15%] -z-10 w-[65%] h-[65%] rounded-full bg-emerald-400/10 dark:bg-emerald-500/5 blur-[160px] pointer-events-none animate-float-1"></div>
@@ -134,6 +133,84 @@ title: 首页
     </div>
   </section>
 
+  <section id="knowledge" class="rounded-[32px] p-8 md:p-12 glass-panel border border-slate-200/20 dark:border-slate-800/20 glow-green space-y-8">
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <div class="space-y-1.5">
+        <h2 class="text-3xl font-bold font-serif text-slate-900 dark:text-white flex flex-wrap items-center gap-3">
+          <i data-lucide="book-open" class="w-6 h-6 text-emerald-500"></i>
+          <span>知识库精选笔记</span>
+          <span class="text-xs font-sans font-medium px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Latest 5</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 dark:text-slate-500">在这里，我用系统的知识图谱沉淀学习和开发过程中的点滴积累。</p>
+      </div>
+      <a href="{{ '/docs.html' | relative_url }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all">进入知识库 <i data-lucide="arrow-up-right" class="w-4.5 h-4.5 text-emerald-500"></i></a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <div class="lg:col-span-4 knowledge-latest-column">
+        <div class="knowledge-column-heading">
+          <span><i data-lucide="clock-3" class="w-4 h-4"></i>最近更新</span>
+          <small>按发布时间排序</small>
+        </div>
+        <div class="knowledge-latest-list" role="tablist" aria-label="最新知识库文章">
+        {% for doc in selected_notes limit: 5 %}
+          <button
+            type="button"
+            id="knowledge-note-tab-{{ forloop.index0 }}"
+            class="knowledge-note-btn {% if forloop.first %}is-active{% endif %}"
+            data-note-index="{{ forloop.index0 }}"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="knowledge-note-panel-{{ forloop.index0 }}"
+          >
+            <span class="knowledge-note-index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+            <span class="knowledge-note-copy">
+              <span class="knowledge-note-meta">
+                <span>{{ doc.category | default: "未分类" }}</span>
+                <time datetime="{{ doc.date | date_to_xmlschema }}">{{ doc.date | date: "%Y.%m.%d" }}</time>
+              </span>
+              <strong>{{ doc.title }}</strong>
+              <small>{{ doc.excerpt | strip_html | strip_newlines | truncate: 68 }}</small>
+            </span>
+            <span class="knowledge-note-arrow"><i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+          </button>
+        {% endfor %}
+        </div>
+      </div>
+
+      <div class="lg:col-span-8 knowledge-preview-shell">
+        {% for doc in selected_notes limit: 5 %}
+        <article
+          id="knowledge-note-panel-{{ forloop.index0 }}"
+          class="knowledge-preview-panel {% unless forloop.first %}hidden{% endunless %}"
+          data-note-panel="{{ forloop.index0 }}"
+          role="tabpanel"
+          aria-labelledby="knowledge-note-tab-{{ forloop.index0 }}"
+          aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+        >
+          <header class="knowledge-preview-header">
+            <div class="knowledge-preview-title">
+              <div class="knowledge-preview-meta">
+                <span><i data-lucide="folder" class="w-3.5 h-3.5"></i>{{ doc.category | default: "未分类" }}</span>
+                <time datetime="{{ doc.date | date_to_xmlschema }}"><i data-lucide="calendar-days" class="w-3.5 h-3.5"></i>{{ doc.date | date: "%Y年%m月%d日" }}</time>
+              </div>
+              <h3>{{ doc.title }}</h3>
+            </div>
+            <a href="{{ doc.url | relative_url }}" class="knowledge-preview-link">
+              <span>阅读全文</span>
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </a>
+          </header>
+          <div class="knowledge-preview-rule"></div>
+          <div class="knowledge-preview-scroll kb-markdown-preview" tabindex="0" aria-label="{{ doc.title }}文章预览，可滚动阅读">
+            {{ doc.content | markdownify }}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
   <section id="projects" class="space-y-8">
     <div class="flex items-center justify-between">
       <div class="space-y-1.5">
@@ -175,59 +252,6 @@ title: 首页
         </div>
       </div>
       {% endfor %}
-    </div>
-  </section>
-
-  <section id="knowledge" class="rounded-[32px] p-8 md:p-12 glass-panel border border-slate-200/20 dark:border-slate-800/20 glow-green space-y-8">
-    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-      <div class="space-y-1.5">
-        <h2 class="text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-3"><i data-lucide="book-open" class="w-6 h-6 text-emerald-500"></i>知识库精选笔记</h2>
-        <p class="text-xs sm:text-sm text-slate-400 dark:text-slate-500">在这里，我用系统的知识图谱沉淀学习和开发过程中的点滴积累。</p>
-      </div>
-      <a href="{{ '/docs.html' | relative_url }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all">进入知识库 <i data-lucide="arrow-up-right" class="w-4.5 h-4.5 text-emerald-500"></i></a>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <div class="lg:col-span-4 flex flex-col gap-3">
-        {% for category in docs_by_category %}
-        {% assign category_mod = forloop.index0 | modulo: 3 %}
-        <button type="button" data-category-index="{{ forloop.index0 }}" class="knowledge-category-btn {% if forloop.first %}is-active{% endif %}">
-          <span class="knowledge-category-icon doc-category-pill-{{ category_mod }}"><i data-lucide="{% if category.name contains 'ClickHouse' %}database{% elsif category.name contains 'AI' %}brain{% elsif category.name contains 'Nginx' %}network{% else %}folder-open{% endif %}" class="w-5 h-5"></i></span>
-          <span class="knowledge-category-copy">
-            <strong>{{ category.name | default: "未分类" }}</strong>
-            <small>{{ category.items | size }} 篇文章</small>
-          </span>
-        </button>
-        {% endfor %}
-      </div>
-
-      <div class="lg:col-span-8 knowledge-article-shell bg-slate-500/5 dark:bg-[#0c111d]/40 rounded-2xl p-5 sm:p-6 border border-slate-200/25 dark:border-slate-800/25">
-        {% for category in docs_by_category %}
-        <div data-category-panel="{{ forloop.index0 }}" class="knowledge-article-panel {% unless forloop.first %}hidden{% endunless %}">
-          <div class="flex items-center justify-between gap-4 mb-4">
-            <div>
-              <span class="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Category</span>
-              <h3 class="mt-1 text-xl font-extrabold text-slate-900 dark:text-white">{{ category.name | default: "未分类" }}</h3>
-            </div>
-            <a href="{{ '/docs.html' | relative_url }}" class="hidden sm:inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400">全部文章 <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
-          </div>
-
-          <div class="knowledge-article-list">
-            {% assign category_docs = category.items | sort: "date" | reverse %}
-            {% for doc in category_docs limit: 8 %}
-            <a href="{{ doc.url | relative_url }}" class="knowledge-article-card">
-              <span class="knowledge-article-index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-              <span class="knowledge-article-main">
-                <strong>{{ doc.title }}</strong>
-                <small>{{ doc.excerpt | strip_html | strip_newlines | truncate: 96 }}</small>
-              </span>
-              <span class="knowledge-article-arrow"><i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>
-            </a>
-            {% endfor %}
-          </div>
-        </div>
-        {% endfor %}
-      </div>
     </div>
   </section>
 </main>
@@ -284,12 +308,22 @@ title: 首页
 <script>
   lucide.createIcons();
 
-  document.querySelectorAll('.knowledge-category-btn').forEach(btn => {
+  document.querySelectorAll('.knowledge-note-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const index = btn.getAttribute('data-category-index');
-      document.querySelectorAll('.knowledge-category-btn').forEach(item => item.classList.toggle('is-active', item === btn));
-      document.querySelectorAll('[data-category-panel]').forEach(panel => {
-        panel.classList.toggle('hidden', panel.getAttribute('data-category-panel') !== index);
+      const index = btn.getAttribute('data-note-index');
+      document.querySelectorAll('.knowledge-note-btn').forEach(item => {
+        const isActive = item === btn;
+        item.classList.toggle('is-active', isActive);
+        item.setAttribute('aria-selected', String(isActive));
+      });
+      document.querySelectorAll('[data-note-panel]').forEach(panel => {
+        const isActive = panel.getAttribute('data-note-panel') === index;
+        panel.classList.toggle('hidden', !isActive);
+        panel.setAttribute('aria-hidden', String(!isActive));
+        if (isActive) {
+          const preview = panel.querySelector('.knowledge-preview-scroll');
+          if (preview) preview.scrollTop = 0;
+        }
       });
       lucide.createIcons();
     });
