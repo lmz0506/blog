@@ -91,9 +91,6 @@ title: 首页
           {% if site.data.profile.social.email %}
           <a href="mailto:{{ site.data.profile.social.email }}" class="home-action-btn home-action-email"><i data-lucide="mail" class="w-4.5 h-4.5"></i> Email</a>
           {% endif %}
-          <button id="viewResumeBtn" class="home-action-btn home-action-resume">
-            <i data-lucide="file-text" class="w-4.5 h-4.5"></i> 查看简历
-          </button>
         </div>
       </div>
 
@@ -211,99 +208,75 @@ title: 首页
     </div>
   </section>
 
-  <section id="projects" class="space-y-8">
+  <section id="projects" class="space-y-8" aria-labelledby="projects-title">
     <div class="flex items-center justify-between">
       <div class="space-y-1.5">
-        <h2 class="text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-3">
+        <h2 id="projects-title" class="text-3xl font-bold font-serif text-slate-900 dark:text-white flex items-center gap-3">
           <span>推荐项目</span>
           <span class="text-xs font-sans font-medium px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400">{{ project_items.size }} Active</span>
         </h2>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    <div id="projectCarousel" class="project-carousel" aria-roledescription="carousel" aria-label="推荐项目">
+      <div class="project-grid" aria-live="polite">
       {% for project in project_items %}
-      <div class="project-card group relative rounded-2xl border border-slate-100/50 dark:border-slate-900/30 bg-white/65 dark:bg-[#0c111d]/50 p-6 md:p-8 transition-all duration-500 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-500/20 flex flex-col justify-between">
+      {% assign project_page = forloop.index0 | divided_by: 4 %}
+      {% assign project_icon_mod = forloop.index0 | modulo: 4 %}
+      <article class="project-card group" data-project-page="{{ project_page }}" data-project-position="{{ forloop.index }}" {% unless forloop.index <= 4 %}hidden{% endunless %}>
         <a href="{{ project.url }}" target="_blank" rel="noreferrer" class="project-repo-link" aria-label="打开 {{ project.name }} 远程仓库">
           <span>远程仓库</span>
           <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
         </a>
-        <div class="space-y-5">
-          <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
-            <div class="flex items-start gap-4 sm:gap-6">
-              <span class="font-serif text-4xl text-emerald-500/20 dark:text-emerald-400/15 group-hover:text-emerald-500/40 transition-colors select-none font-bold">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-              <div class="space-y-2">
-                <div class="flex flex-wrap items-center gap-2.5">
-                  <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">{{ project.name }}</h3>
-                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10"><i data-lucide="star" class="w-3 h-3 fill-emerald-500"></i> 精选</span>
-                </div>
-                <p class="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">{{ project.description }}</p>
-              </div>
-            </div>
-          </div>
+
+        <span class="project-number" aria-hidden="true">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+
+        <div class="project-visual" aria-hidden="true">
+          <span class="project-orbit project-orbit-main"></span>
+          <span class="project-orbit-dot project-orbit-dot-left"></span>
+          <span class="project-orbit-dot project-orbit-dot-right"></span>
+          <span class="project-icon-tile project-icon-tile-{{ project_icon_mod }}">
+            {% case project_icon_mod %}
+              {% when 0 %}<i data-lucide="book-open"></i>
+              {% when 1 %}<i data-lucide="panels-top-left"></i>
+              {% when 2 %}<i data-lucide="images"></i>
+              {% else %}<i data-lucide="blocks"></i>
+            {% endcase %}
+          </span>
         </div>
-        <div class="flex flex-wrap items-center justify-between gap-3 mt-6 pt-4 border-t border-slate-100/60 dark:border-slate-900/30">
-          <div class="flex flex-wrap gap-1.5">
+
+        <div class="project-content">
+          <div class="project-heading">
+            <h3>{{ project.name }}</h3>
+            <span class="project-featured"><i data-lucide="star"></i> 精选</span>
+          </div>
+          <p class="project-description">{{ project.description }}</p>
+          <div class="project-tags">
             {% for tag in project.tags %}
             {% assign tag_mod = forloop.index0 | modulo: 5 %}
             <span class="project-tag-palette project-tag-palette-{{ tag_mod }}">{{ tag }}</span>
             {% endfor %}
           </div>
         </div>
-      </div>
+      </article>
       {% endfor %}
+      </div>
+
+      {% assign project_last_page = project_items.size | minus: 1 | divided_by: 4 %}
+      <div class="project-pagination" role="group" aria-label="推荐项目分页">
+        {% for page_index in (0..project_last_page) %}
+        <button
+          type="button"
+          class="project-page-dot {% if forloop.first %}is-active{% endif %}"
+          data-project-page-target="{{ page_index }}"
+          aria-label="查看第 {{ forloop.index }} 页项目"
+          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+        ></button>
+        {% endfor %}
+      </div>
     </div>
   </section>
 </main>
-
-<div id="resumeModal" class="fixed inset-0 z-[100] bg-slate-950/40 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-  <div class="w-full max-w-2xl bg-white dark:bg-[#0f172a] rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col max-h-[90vh]">
-    <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/30">
-      <div class="flex items-center gap-3">
-        <div class="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"><i data-lucide="file-text" class="w-5 h-5"></i></div>
-        <div>
-          <h3 class="font-bold text-slate-900 dark:text-white text-lg">{{ site.data.profile.name }}的简历档案</h3>
-          <p class="text-xs text-slate-400">Full-Stack / AI Developer / Architect</p>
-        </div>
-      </div>
-      <button id="closeResumeBtn" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-all"><i data-lucide="x" class="w-5 h-5"></i></button>
-    </div>
-    <div class="p-6 overflow-y-auto space-y-6 text-sm">
-      <div class="grid grid-cols-2 gap-4">
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80">
-          <span class="text-xs text-slate-400 block mb-1">专业经历</span>
-          <span class="font-bold text-slate-800 dark:text-white"><span id="workYears"></span>+ 年全栈开发经验</span>
-        </div>
-        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80">
-          <span class="text-xs text-slate-400 block mb-1">偏好领域</span>
-          <span class="font-bold text-slate-800 dark:text-white">AI Agent、微服务架构</span>
-        </div>
-      </div>
-      <div class="space-y-4">
-        <h4 class="font-bold text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400">实践成长历程</h4>
-        <div class="relative border-l border-emerald-500/30 ml-2.5 pl-5 space-y-6">
-          {% for work in site.data.resume.work_experience limit: 2 %}
-          <div class="relative">
-            <span class="absolute -left-[25px] top-1.5 w-2.5 h-2.5 rounded-full {% if forloop.first %}bg-emerald-500 ring-4 ring-emerald-500/20{% else %}bg-slate-300 dark:bg-slate-600{% endif %}"></span>
-            <span class="text-xs font-semibold {% if forloop.first %}text-emerald-600 dark:text-emerald-400{% else %}text-slate-400{% endif %}">{{ work.period }}</span>
-            <h5 class="font-bold text-slate-800 dark:text-white text-sm mt-0.5">{{ work.position }}</h5>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{{ work.description }}</p>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-    <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30 flex justify-end gap-2">
-      <button onclick="copyEmailToClipboard()" class="px-4 py-2 text-xs font-bold rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5"><i data-lucide="copy" class="w-4 h-4"></i> 复制联系邮箱</button>
-      <button id="closeResumeBtnSecondary" class="px-5 py-2 text-xs font-bold rounded-xl bg-slate-950 text-white dark:bg-slate-800 dark:text-slate-100 hover:opacity-90 transition-all">我知道了</button>
-    </div>
-  </div>
-</div>
-
-<div id="toastMessage" class="fixed bottom-6 right-6 z-[110] px-4 py-3 rounded-2xl bg-slate-900 text-white dark:bg-emerald-600 dark:text-white shadow-xl shadow-slate-950/10 border border-white/10 hidden items-center gap-2.5 transition-all text-sm transform translate-y-2 opacity-0">
-  <i data-lucide="info" class="w-4 h-4 text-emerald-400 dark:text-white"></i>
-  <span id="toastText">通知内容</span>
-</div>
 
 <script>
   lucide.createIcons();
@@ -329,54 +302,37 @@ title: 首页
     });
   });
 
-  const resumeModal = document.getElementById('resumeModal');
-  const viewResumeBtn = document.getElementById('viewResumeBtn');
-  const closeResumeBtn = document.getElementById('closeResumeBtn');
-  const closeResumeBtnSecondary = document.getElementById('closeResumeBtnSecondary');
-  const workYears = new Date().getFullYear() - {{ site.data.resume.start_year | default: 2018 }};
-  document.getElementById('workYears').textContent = workYears;
+  const projectCarousel = document.getElementById('projectCarousel');
+  if (projectCarousel) {
+    const projectCards = [...projectCarousel.querySelectorAll('[data-project-page]')];
+    const projectDots = [...projectCarousel.querySelectorAll('[data-project-page-target]')];
+    let currentProjectPage = 0;
 
-  function openModal() {
-    resumeModal.classList.remove('hidden');
-    resumeModal.style.animation = 'fadeIn 0.3s ease forwards';
-  }
-  function closeModal() {
-    resumeModal.classList.add('hidden');
-  }
-  viewResumeBtn.addEventListener('click', openModal);
-  closeResumeBtn.addEventListener('click', closeModal);
-  closeResumeBtnSecondary.addEventListener('click', closeModal);
-  resumeModal.addEventListener('click', e => { if (e.target === resumeModal) closeModal(); });
+    function showProjectPage(page) {
+      if (!projectDots.length) return;
+      currentProjectPage = (page + projectDots.length) % projectDots.length;
+      projectCards.forEach(card => {
+        const isVisible = Number(card.dataset.projectPage) === currentProjectPage;
+        card.hidden = !isVisible;
+        card.setAttribute('aria-hidden', String(!isVisible));
+      });
+      projectDots.forEach((dot, index) => {
+        const isActive = index === currentProjectPage;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-current', String(isActive));
+      });
+    }
 
-  function copyEmailToClipboard() {
-    const text = {{ site.data.profile.social.email | jsonify }};
-    const input = document.createElement('input');
-    input.setAttribute('value', text);
-    document.body.appendChild(input);
-    input.select();
-    document.execCommand('copy');
-    document.body.removeChild(input);
-    showToast('联系邮箱已复制到剪贴板，欢迎来信！');
-  }
-
-  function showToast(message) {
-    const toast = document.getElementById('toastMessage');
-    const toastText = document.getElementById('toastText');
-    toastText.textContent = message;
-    toast.classList.remove('hidden');
-    toast.classList.add('flex');
-    setTimeout(() => {
-      toast.style.transform = 'translateY(0)';
-      toast.style.opacity = '1';
-    }, 50);
-    setTimeout(() => {
-      toast.style.transform = 'translateY(8px)';
-      toast.style.opacity = '0';
-      setTimeout(() => {
-        toast.classList.add('hidden');
-        toast.classList.remove('flex');
-      }, 300);
-    }, 3000);
+    projectDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => showProjectPage(index));
+    });
+    projectCarousel.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      showProjectPage(currentProjectPage + (event.key === 'ArrowRight' ? 1 : -1));
+      projectDots[currentProjectPage].focus();
+    });
+    showProjectPage(0);
   }
 
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');

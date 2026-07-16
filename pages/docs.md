@@ -25,17 +25,22 @@ permalink: /docs.html
       <div class="docs-sidebar-sticky">
         <span class="docs-kicker">Categories</span>
         <h2>分类导航</h2>
-        <div class="docs-category-list">
+        <div class="docs-category-list" id="docs-category-list">
           {% for category in docs_by_category %}
+          {% assign category_docs = category.items | sort: "date" | reverse %}
+          {% assign category_latest_doc = category_docs.first %}
           <button
             class="docs-category-button {% if forloop.first %}active{% endif %}"
             type="button"
-            data-category="{{ category.name }}">
+            data-category="{{ category.name }}"
+            data-latest="{{ category_latest_doc.date | date: '%Y-%m-%d' }}"
+            data-count="{{ category.items | size }}">
             <strong>{{ category.name | default: "未分类" }}</strong>
             <span>{{ category.items | size }} 篇</span>
           </button>
           {% endfor %}
         </div>
+        <nav class="docs-category-pagination" id="docs-category-pagination" aria-label="分类分页"></nav>
       </div>
     </aside>
 
@@ -111,10 +116,83 @@ permalink: /docs.html
 document.addEventListener('DOMContentLoaded', function() {
   var docsDataNode = document.getElementById('docs-data');
   var docsData = docsDataNode ? JSON.parse(docsDataNode.textContent) : {};
-  var buttons = document.querySelectorAll('.docs-category-button');
+  var categoryList = document.getElementById('docs-category-list');
+  var categoryPagination = document.getElementById('docs-category-pagination');
+  var buttons = Array.prototype.slice.call(document.querySelectorAll('.docs-category-button'));
   var river = document.getElementById('docs-river');
   var title = document.getElementById('docs-current-title');
   var count = document.getElementById('docs-current-count');
+  var categoriesPerPage = 8;
+  var currentCategoryPage = 0;
+
+  buttons.sort(function(a, b) {
+    var latestDifference = (b.dataset.latest || '').localeCompare(a.dataset.latest || '');
+    if (latestDifference !== 0) return latestDifference;
+    var countDifference = Number(b.dataset.count || 0) - Number(a.dataset.count || 0);
+    if (countDifference !== 0) return countDifference;
+    return a.dataset.category.localeCompare(b.dataset.category, 'zh-CN');
+  });
+  buttons.forEach(function(button) {
+    categoryList.appendChild(button);
+  });
+
+  function renderCategoryPagination() {
+    var pageCount = Math.ceil(buttons.length / categoriesPerPage);
+    categoryPagination.innerHTML = '';
+    if (pageCount <= 1) {
+      categoryPagination.hidden = true;
+      return;
+    }
+    categoryPagination.hidden = false;
+
+    var previous = document.createElement('button');
+    previous.type = 'button';
+    previous.className = 'docs-category-page docs-category-page-arrow';
+    previous.setAttribute('aria-label', '上一页分类');
+    previous.textContent = '‹';
+    previous.disabled = currentCategoryPage === 0;
+    previous.addEventListener('click', function() {
+      renderCategoryPage(currentCategoryPage - 1);
+    });
+    categoryPagination.appendChild(previous);
+
+    for (var pageIndex = 0; pageIndex < pageCount; pageIndex += 1) {
+      (function(index) {
+        var pageButton = document.createElement('button');
+        pageButton.type = 'button';
+        pageButton.className = 'docs-category-page' + (index === currentCategoryPage ? ' active' : '');
+        pageButton.textContent = String(index + 1);
+        pageButton.setAttribute('aria-label', '查看第 ' + (index + 1) + ' 页分类');
+        if (index === currentCategoryPage) pageButton.setAttribute('aria-current', 'page');
+        pageButton.addEventListener('click', function() {
+          renderCategoryPage(index);
+        });
+        categoryPagination.appendChild(pageButton);
+      })(pageIndex);
+    }
+
+    var next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'docs-category-page docs-category-page-arrow';
+    next.setAttribute('aria-label', '下一页分类');
+    next.textContent = '›';
+    next.disabled = currentCategoryPage === pageCount - 1;
+    next.addEventListener('click', function() {
+      renderCategoryPage(currentCategoryPage + 1);
+    });
+    categoryPagination.appendChild(next);
+  }
+
+  function renderCategoryPage(page) {
+    var pageCount = Math.max(1, Math.ceil(buttons.length / categoriesPerPage));
+    currentCategoryPage = Math.max(0, Math.min(page, pageCount - 1));
+    var start = currentCategoryPage * categoriesPerPage;
+    var end = start + categoriesPerPage;
+    buttons.forEach(function(button, index) {
+      button.hidden = index < start || index >= end;
+    });
+    renderCategoryPagination();
+  }
 
   function renderCategory(categoryName) {
     var docs = docsData[categoryName] || [];
@@ -145,5 +223,11 @@ document.addEventListener('DOMContentLoaded', function() {
       renderCategory(button.dataset.category);
     });
   });
+
+  if (buttons.length) {
+    buttons.forEach(function(button) { button.classList.remove('active'); });
+    renderCategory(buttons[0].dataset.category);
+  }
+  renderCategoryPage(0);
 });
 </script>
